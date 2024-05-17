@@ -8,19 +8,31 @@
           width: 100%; height: 10vh; display: flex; align-items: center; justify-content: center;">
             柜台操作子系统
           </div>
-          <el-menu-item index="/manager">
-            <el-icon>
-              <Avatar />
-            </el-icon>
-            <span>出纳员管理</span>
-          </el-menu-item>
+          <el-sub-menu>
+            <template #title>
+              <el-icon><location /></el-icon>
+              <span>账户管理</span>
+            </template>
+            <el-menu-item index="/accountManage">
+              <span>账户状态管理</span>
+            </el-menu-item>
+            <el-menu-item index="/accountOpen">
+              <span>账户开设</span>
+            </el-menu-item>
+          </el-sub-menu>
+          <div style="height: 30px"></div>
+          <a href="/manager" style="margin-left: 40px;">
+            <el-button type="danger">
+              退出
+            </el-button>
+          </a>
         </el-menu>
+
       </el-aside>
       <el-container>
-        <el-header style="height: 0vh;"></el-header>
         <el-main style="height: 100%; width: 100%; ">
           <el-scrollbar height="100%">
-            <RouterView class="content" style="height: 90vh; max-height: 100%; background-color: white; color: black;" />
+            <RouterView class="content" style="height: 100vh; max-height: 100%; background-color: white; color: black;" />
           </el-scrollbar>
         </el-main>
       </el-container>

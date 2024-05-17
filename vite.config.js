@@ -17,7 +17,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         index: path.resolve(__dirname, 'index.html'),
-        home: path.resolve(__dirname, 'manager.html'),
+        manager: path.resolve(__dirname, 'manager.html'),
       }, output: {
         chunkFileNames: 'static/js/[name]-[hash].js',
         entryFileNames: "static/js/[name]-[hash].js",

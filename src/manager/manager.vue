@@ -1,33 +1,86 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="main">
+    <el-container>
+      <el-aside class="aside">
+        <el-menu active-text-color="#ffd04b" background-color="#444444" default-active="1" text-color="#fff"
+                 style="height:100%; width: 100%; overflow: hidden" :router="true">
+          <div style="color: white; background-color: #181818;
+          width: 100%; height: 10vh; display: flex; align-items: center; justify-content: center;">
+            管理员
+          </div>
+          <el-menu-item index="/manager/home">
+            <el-icon>
+              <Avatar />
+            </el-icon>
+            <span>出纳员管理</span>
+          </el-menu-item>
+          <div style="height: 30px"></div>
+          <a href="/cashier" style="margin-left: 40px;">
+            <el-button type="danger">
+              退出
+            </el-button>
+          </a>
+        </el-menu>
+
+      </el-aside>
+      <el-container>
+        <el-header style="height: 0vh;"></el-header>
+        <el-main style="height: 100%; width: 100%; ">
+          <el-scrollbar height="100%">
+            <RouterView class="content" style="height: 100vh; max-height: 100%; background-color: white; color: black;" />
+          </el-scrollbar>
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
-  <router-link to="/home/helloWorld">组件1</router-link>
-  <a href="/index">跳转到登录页面</a>
-  <router-view></router-view>
-<!--  <HelloWorld msg="Vite + Vue" />-->
 </template>
 
+<script>
+export default {
+  methods: {
+    LogOut() {
+      this.$router.push('/another-page');
+    }
+  }
+}
+</script>
+
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+#app {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #dcdcdc;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.main {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+  height: auto;
+  background-color: #dcdcdc;
+
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+.title {
+  background-color: #ffffff;
+  height: 60px;
+}
+
+.aside {
+  min-height: 100vh;
+  width: 200px;
+  background-color: black;
 }
 </style>
