@@ -14,7 +14,7 @@
         <el-button style="margin-left: 10px;" type="primary" @click="this.TransferVisible = true">转账服务</el-button>
     </div>
 
-    <!-- 取款记录 -->
+    <!-- 转账记录 -->
     <el-table v-if="isShow" :data="fitlerTableData" height="600"
         :default-sort="{ prop: 'withdrawl_record_id', order: 'ascending' }" :table-layout="'auto'"
         style="width: 100%; margin-left: 50px; margin-top: 30px; margin-right: 50px; max-width: 80vw;">

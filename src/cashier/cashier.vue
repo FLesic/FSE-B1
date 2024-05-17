@@ -26,6 +26,12 @@
             </el-icon>
             <span>账户转账</span>
           </el-menu-item>
+          <el-menu-item index="/query">
+            <el-icon>
+              <Avatar />
+            </el-icon>
+            <span>查询记录</span>
+          </el-menu-item>
         </el-menu>
       </el-aside>
       <el-container>

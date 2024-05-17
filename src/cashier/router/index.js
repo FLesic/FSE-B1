@@ -4,6 +4,7 @@ import Cashier from '@/cashier/components/cashier.vue'
 import Deposit from '@/cashier/components/deposit.vue'
 import Withdrawl from '@/cashier/components/withdrawl.vue'
 import Transfer from '@/cashier/components/transfer.vue'
+import Query from '@/cashier/components/query.vue'
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -26,6 +27,10 @@ const router = createRouter({
         {
             path: '/transfer',
             component: Transfer
+        },
+        {
+            path: '/query',
+            component: Query
         }
     ]
 })
