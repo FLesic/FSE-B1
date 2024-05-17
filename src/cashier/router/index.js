@@ -18,10 +18,6 @@ const router = createRouter({
             component: AccountManage,
         },
         {
-            path: '/cashier/cashier',
-            component: Cashier
-        },
-        {
             path: '/cashier/deposit',
             component: Deposit
         },

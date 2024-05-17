@@ -10,7 +10,7 @@
     </div>
 
     <!-- 存款操作 -->
-    <div style="width:30%;margin-left:30px; padding-top:5vh;">
+    <div style="width:70%;margin-left:30px; padding-top:5vh;">
         <!-- <el-input v-model="this.toQuery" style="display:inline; " placeholder="输入借书证ID"></el-input> -->
         <el-button style="margin-left: 10px;" type="primary" @click="this.DemandDepositVisible = true">活期存款</el-button>
         <el-button style="margin-left: 10px;" type="primary" @click="this.TimeDepositVisible = true">定期存款</el-button>
