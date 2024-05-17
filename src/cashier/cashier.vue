@@ -6,17 +6,41 @@
                  style="height:100%; width: 100%; overflow: hidden" :router="true">
           <div style="color: white; background-color: #181818;
           width: 100%; height: 10vh; display: flex; align-items: center; justify-content: center;">
-            柜台操作子系统
+            出纳员
           </div>
+          <el-menu-item index="/cashier/deposit">
+            <el-icon>
+              <Avatar />
+            </el-icon>
+            <span>账户存款</span>
+          </el-menu-item>
+          <el-menu-item index="/cashier/withdrawal">
+            <el-icon>
+              <Avatar />
+            </el-icon>
+            <span>账户取款</span>
+          </el-menu-item>
+          <el-menu-item index="/cashier/transfer">
+            <el-icon>
+              <Avatar />
+            </el-icon>
+            <span>账户转账</span>
+          </el-menu-item>
+          <el-menu-item index="/cashier/query">
+            <el-icon>
+              <Avatar />
+            </el-icon>
+            <span>查询记录</span>
+          </el-menu-item>
           <el-sub-menu>
             <template #title>
               <el-icon><location /></el-icon>
               <span>账户管理</span>
             </template>
-            <el-menu-item index="/accountManage">
+            <el-menu-item index="/cashier/accountManage">
               <span>账户状态管理</span>
             </el-menu-item>
-            <el-menu-item index="/accountOpen">
+            <el-menu-item index="/cashier/accountOpen">
               <span>账户开设</span>
             </el-menu-item>
           </el-sub-menu>
