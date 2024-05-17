@@ -6,13 +6,25 @@
                  style="height:100%; width: 100%; overflow: hidden" :router="true">
           <div style="color: white; background-color: #181818;
           width: 100%; height: 10vh; display: flex; align-items: center; justify-content: center;">
-            柜台操作子系统
+            出纳员
           </div>
-          <el-menu-item index="/manager">
+          <el-menu-item index="/deposit">
             <el-icon>
               <Avatar />
             </el-icon>
-            <span>出纳员管理</span>
+            <span>账户存款</span>
+          </el-menu-item>
+          <el-menu-item index="/withdrawl">
+            <el-icon>
+              <Avatar />
+            </el-icon>
+            <span>账户取款</span>
+          </el-menu-item>
+          <el-menu-item index="/transfer">
+            <el-icon>
+              <Avatar />
+            </el-icon>
+            <span>账户转账</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
