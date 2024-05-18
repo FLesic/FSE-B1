@@ -14,10 +14,10 @@
     <div style="height: 20px"></div>
     <div style = "margin-left: 4.3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
       密码：
-      <el-input v-model="password" style="width: 12.5vw; margin-left: 1rem" clearable/>
+      <el-input v-model="password" style="width: 12.5vw; margin-left: 1rem" type="password" clearable/>
     </div>
     <div style="height: 20px"></div>
-    <div style = "margin-left: 4.3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
+    <div style = "margin-left: 4.3vw; font-weight: bold; font-size: 1rem; margin-top: 5px; ">
       <el-button type="primary" style="margin-left: 57px" @click="openAccount()">开设账户</el-button>
     </div>
     <div class="accountBox" v-if="isShow">

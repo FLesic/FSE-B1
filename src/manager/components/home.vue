@@ -38,6 +38,11 @@
           </div>
         </div>
       </div>
+      <el-button class="newCashierBox" @click="newCardVisible = true">
+        <el-icon style="height: 50px; width: 50px;">
+          <Plus style="height: 100%; width: 100%;" />
+        </el-icon>
+      </el-button>
     </div>
   </el-scrollbar>
 </template>
@@ -51,34 +56,34 @@ export default{
           account: '炸毛的王昊元',
           name: '王昊元',
           sex: '男',
-          phone:'123456',
+          phone:'18962391106',
           ifTrade: true,
           ifManage: true
         },
         {
           id: 2,
-          account: '毛炸了的王昊元',
+          account: '飞翔的猪',
           name: '王元豪',
           sex: '男',
-          phone:'123456',
+          phone:'18962391107',
           ifTrade: true,
           ifManage: false
         },
         {
           id: 3,
-          account: '王昊元炸毛了',
-          name: '王元',
-          sex: '男',
-          phone:'123456',
+          account: 'Cold',
+          name: '李四',
+          sex: '女',
+          phone:'18962391190',
           ifTrade: true,
           ifManage: true
         },
         {
           id: 4,
-          account: '王昊炸毛了',
-          name: '王',
+          account: 'Flesic',
+          name: '张三',
           sex: '男',
-          phone:'123456',
+          phone:'18962391767',
           ifTrade: true,
           ifManage: false
         },
@@ -100,5 +105,17 @@ export default{
   padding: 7.5px;
   padding-right: 10px;
   padding-top: 15px;
+}
+.newCashierBox {
+  height: 380px;
+  width: 275px;
+  margin-top: 40px;
+  margin-left: 27.5px;
+  margin-right: 10px;
+  padding: 7.5px;
+  padding-right: 10px;
+  padding-top: 15px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  text-align: center;
 }
 </style>
