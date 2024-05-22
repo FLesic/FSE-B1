@@ -4,6 +4,13 @@ from django.db import models
 
 class employee(models.Model):
     employee_id = models.IntegerField(primary_key = True)
+    employee_name = models.CharField(max_length = 20, null = False)
+    identity_card = models.CharField(max_length = 18, null = False)
+    employee_sex = models.IntegerField(null = False)
+    phone_number = models.CharField(max_length = 20, null = False)
+    occupation_name = models.CharField(max_length = 50, null = False)
+    is_employeed = models.BooleanField(null = False)
+    other_information = models.CharField(max_length = 1021)
 
 class sys_manage(models.Model):
     sys_manager_id = models.IntegerField(primary_key = True)
