@@ -6,27 +6,28 @@
                  style="height:100%; width: 100%; overflow: hidden" :router="true">
           <div style="color: white; background-color: #181818;
           width: 100%; height: 10vh; display: flex; align-items: center; justify-content: center;">
-            出纳员
+            出纳员 #{{cashierID}}
           </div>
-          <el-menu-item index="/cashier/deposit">
+          <!-- 通过url参数形式传递给子组件 -->
+          <el-menu-item :index="'/cashier/deposit?cashierID='+this.cashierID">
             <el-icon>
               <Avatar />
             </el-icon>
             <span>账户存款</span>
           </el-menu-item>
-          <el-menu-item index="/cashier/withdrawal">
+          <el-menu-item :index="'/cashier/withdrawal?cashierID='+this.cashierID">
             <el-icon>
               <Avatar />
             </el-icon>
             <span>账户取款</span>
           </el-menu-item>
-          <el-menu-item index="/cashier/transfer">
+          <el-menu-item :index="'/cashier/transfer?cashierID='+this.cashierID">
             <el-icon>
               <Avatar />
             </el-icon>
             <span>账户转账</span>
           </el-menu-item>
-          <el-menu-item index="/cashier/query">
+          <el-menu-item :index="'/cashier/query?cashierID='+this.cashierID">
             <el-icon>
               <Avatar />
             </el-icon>
@@ -37,10 +38,10 @@
               <el-icon><location /></el-icon>
               <span>账户管理</span>
             </template>
-            <el-menu-item index="/cashier/accountManage">
+            <el-menu-item :index="'/cashier/accountManage?cashierID='+this.cashierID">
               <span>账户状态管理</span>
             </el-menu-item>
-            <el-menu-item index="/cashier/accountOpen">
+            <el-menu-item :index="'/cashier/accountOpen?cashierID='+this.cashierID">
               <span>账户开设</span>
             </el-menu-item>
           </el-sub-menu>
@@ -64,7 +65,29 @@
   </div>
 </template>
 
-<script setup>
+<script>
+export default {
+  created() {
+    this.fetchDataFromUrl();
+  },
+  data(){
+    return{
+      cashierID: 0
+    }
+  },
+  methods: {
+    fetchDataFromUrl() {
+      // 获取当前URL
+      const url = new URL(window.location);
+
+      // 创建URLSearchParams对象
+      const params = new URLSearchParams(url.search);
+
+      // 从查询字符串中获取参数
+      this.cashierID = params.get('cashierID');
+    }
+  }
+};
 </script>
 
 <style scoped>

@@ -15,7 +15,7 @@
             <span>出纳员管理</span>
           </el-menu-item>
           <div style="height: 30px"></div>
-          <a href="/cashier" style="margin-left: 40px;">
+          <a href="/cashier?cashierID=5" style="margin-left: 40px;">
             <el-button type="danger">
               退出
             </el-button>

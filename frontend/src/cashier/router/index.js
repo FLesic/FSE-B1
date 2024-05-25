@@ -4,8 +4,8 @@ import Deposit from '@/cashier/components/deposit.vue'
 import Withdrawal from '@/cashier/components/withdrawal.vue'
 import Transfer from '@/cashier/components/transfer.vue'
 import Query from '@/cashier/components/query.vue'
-import AccountManage from "@/cashier/components/AccountStatus.vue";
-import AccountOpen from "@/cashier/components/AccountOpen.vue";
+import AccountManage from "@/cashier/components/accountStatus.vue";
+import AccountOpen from "@/cashier/components/accountOpen.vue";
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
