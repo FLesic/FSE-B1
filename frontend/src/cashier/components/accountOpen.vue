@@ -105,7 +105,7 @@ export default {
 .accountBox {
   height:270px;
   width: 300px;
-  //box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   text-align: center;
   margin-top: 10px;
   margin-left: 10px;
