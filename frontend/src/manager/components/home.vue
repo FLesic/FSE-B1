@@ -305,9 +305,9 @@ export default{
             })
           })
     },
-    mounted() { // 当页面被渲染时
-      this.QueryCashiers()
-    }
+  },
+  mounted() { // 当页面被渲染时
+    this.QueryCashiers()
   }
 }
 </script>
