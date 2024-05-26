@@ -30,14 +30,11 @@
               this.modBaseCashierInfo.identity_card = cashier.identity_card, this.modBaseCashierInfo.sex = cashier.sex">
               修改信息
             </el-button>
-            <el-button type="success" @click="this.modAuthorityCashierVisible = true, this.modAuthorityCashierInfo.id = cashier.identity_card,
+            <el-button type="success" @click="this.modAuthorityCashierVisible = true, this.modAuthorityCashierInfo.id = cashier.id,
               this.modAuthorityCashierInfo.ifManage = cashier.ifManage, this.modAuthorityCashierInfo.ifTrade = cashier.ifTrade">
               修改权限
             </el-button>
-            <!--<el-button type="danger" @click="this.deleteCashierID = cashier.id, this.deleteCashierVisible = true">
-              删除
-            </el-button>-->
-            <el-button type="danger" @click="QueryCashiers()">
+            <el-button type="danger" @click="this.deleteCashierID = cashier.id, this.deleteCashierVisible = true">
               删除
             </el-button>
           </div>
@@ -242,7 +239,7 @@ export default{
   },
   methods: {
     ConfirmNewCashier() {
-      axios.post('/manager/add',
+      axios.post('/manager/add/',
         {
             name: this.newCashierInfo.name,
             identity_card: this.newCashierInfo.identity_card,
@@ -260,7 +257,7 @@ export default{
       })
     },
     ConfirmModBaseCashier() {
-      axios.post('/manager/modify-base',
+      axios.post('/manager/modify-base/',
           {
             id: this.modBaseCashierInfo.id,
             name: this.modBaseCashierInfo.name,
@@ -276,7 +273,7 @@ export default{
       })
     },
     ConfirmModAuthorityCashier(){
-      axios.post('manager/modify-authority',
+      axios.post('manager/modify-authority/',
           {
             id: this.modAuthorityCashierInfo.id,
             ifManage: this.modAuthorityCashierInfo.ifManage,
@@ -288,7 +285,7 @@ export default{
       })
     },
     ConfirmDeleteCashier(){
-      axios.post('manager/delete',
+      axios.post('manager/delete/',
           {
             id: this.deleteCashierID,
           }).then(response => {
@@ -300,7 +297,7 @@ export default{
     },
     QueryCashiers() {
       this.cashiers = []
-      axios.get('/manager/all-cashier')
+      axios.get('/manager/all-cashier/')
           .then(response => {
             let cashiers = response.data
             cashiers.forEach(cashier => {
