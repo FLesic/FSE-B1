@@ -142,7 +142,7 @@
       ConfirmUnfreezeAccount() {
         // this.account.isFrozen = false
         // this.unfreezeVisible = false
-        axios.post('/cashier/unfreeze',
+        axios.post('/cashier/unfreeze/',
             {
               accountID : this.unfreezeAccountID,
             }).then(response=>{
@@ -154,7 +154,7 @@
       ConfirmFreezeAccount() {
         // this.account.isFrozen = true
         // this.freezeVisible = false
-        axios.post('/cashier/freeze',
+        axios.post('/cashier/freeze/',
             {
               accountID : this.freezeAccountID,
             }).then(response=>{
@@ -166,7 +166,7 @@
       ConfirmReportLossAccount() {
         // this.account.isLost = true
         // this.reportLossVisible = false
-        axios.post('/cashier/reportloss',
+        axios.post('/cashier/reportloss/',
             {
               accountID: this.reportLossAccountID,
             }).then(response=>{
@@ -180,7 +180,7 @@
         // this.reissueVisible = false
         // this.isShow = false
         // this.queryAccountID = ''
-        axios.post('/cashier/reissue',
+        axios.post('/cashier/reissue/',
             {
               account: this.reissueAccountID,
             }).then(response=>{
