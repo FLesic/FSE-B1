@@ -34,7 +34,10 @@
               this.modAuthorityCashierInfo.ifManage = cashier.ifManage, this.modAuthorityCashierInfo.ifTrade = cashier.ifTrade">
               修改权限
             </el-button>
-            <el-button type="danger" @click="this.deleteCashierID = cashier.id, this.deleteCashierVisible = true">
+            <!--<el-button type="danger" @click="this.deleteCashierID = cashier.id, this.deleteCashierVisible = true">
+              删除
+            </el-button>-->
+            <el-button type="danger" @click="QueryCashiers()">
               删除
             </el-button>
           </div>

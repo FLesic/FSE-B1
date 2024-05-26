@@ -4,13 +4,13 @@ from django.db import models
 
 class employee(models.Model):
     employee_id = models.IntegerField(primary_key = True)
-    employee_name = models.CharField(max_length = 20, null = False)
-    identity_card = models.CharField(max_length = 18, null = False)
-    employee_sex = models.IntegerField(null = False)
-    phone_number = models.CharField(max_length = 20, null = False)
-    occupation_name = models.CharField(max_length = 50, null = False)
-    is_employeed = models.BooleanField(null = False)
-    other_information = models.CharField(max_length = 1021)
+    employee_name = models.CharField(max_length = 20, null = False, default = "Unknown")
+    identity_card = models.CharField(max_length = 18, null = False, default = "Unknown")
+    employee_sex = models.IntegerField(null = False, default = 0)
+    phone_number = models.CharField(max_length = 20, null = False, default = "Unknown")
+    occupation_name = models.CharField(max_length = 50, null = False, default = "Unknown")
+    is_employeed = models.BooleanField(null = False, default = "False")
+    other_information = models.CharField(max_length = 1021, default = "Unknown")
 
 class sys_manage(models.Model):
     sys_manager_id = models.IntegerField(primary_key = True)
@@ -43,7 +43,7 @@ class account(models.Model):
 
 class deposit_record(models.Model):
     deposit_record_id = models.IntegerField(primary_key = True)
-    account_id = models.ForeignKey(account, on_delete = models.CASCADE)
+    account_id = models.IntegerField(null = False)
     deposit_type = models.CharField(max_length = 10, null = False)
     auto_renew_status = models.BooleanField()
     deposit_start_date = models.DateField(null = False)
@@ -53,15 +53,15 @@ class deposit_record(models.Model):
 
 class withdrawal_record(models.Model):
     withdrawal_record_id = models.IntegerField(primary_key = True)
-    account_id = models.ForeignKey(account, on_delete = models.CASCADE)
+    account_id = models.IntegerField(null = False)
     withdrawal_date = models.DateField(null = False)
     withdrawal_ammount = models.FloatField(null = False)
     cashier_id = models.ForeignKey(cashier, on_delete = models.SET(0))
 
 class transfer_record(models.Model):
     transfer_record_id = models.IntegerField(primary_key = True)
-    account_in_id = models.ForeignKey(account, on_delete = models.CASCADE, related_name = 'income_transfer')
-    account_out_id = models.ForeignKey(account, on_delete = models.CASCADE, related_name = 'outgo_transfer')
+    account_in_id = models.IntegerField(null = False)
+    account_out_id = models.IntegerField(null = False)
     transfer_date = models.DateField(null = False)
     transfer_ammount = models.FloatField(null = False)
     cashier_id = models.ForeignKey(cashier, on_delete = models.SET(0))
