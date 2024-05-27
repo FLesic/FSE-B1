@@ -127,14 +127,19 @@ def cashier_time_deposit(request):
             filter_account[0].current_deposit += data.get('deposit_amount')
             filter_account[0].balance += data.get('deposit_amount')
             filter_account[0].save()
+            auto_renew_status = False
+            if data.get('auto_renew_status') == '1':
+                auto_renew_status = True
+            elif data.get('auto_renew_status') == '2':
+                auto_renew_status = False
             # 更新存款记录
             new_deposit_record = deposit_record(
                 account_id=data.get('account_id'),
                 deposit_type='定期存款',
-                auto_renew_status=data.get('auto_renew_status'),
+                auto_renew_status=auto_renew_status,
                 # --此处存疑--
                 deposit_start_date=datetime.datetime.now(),
-                deposit_end_date=datetime.datetime.now() + data.get('deposit_term'),
+                deposit_end_date=datetime.datetime.now() + datetime.timedelta(days=int(data.get('deposit_term')) * 30),
                 # -----
                 deposit_amount=data.get('deposit_amount'),
                 cashier_id=data.get('cashier_id'),
