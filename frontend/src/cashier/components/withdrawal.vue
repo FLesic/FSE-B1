@@ -41,7 +41,7 @@
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 取款金额：
-                <el-input v-model="newWithdrawlInfo.withdrawl_amount" style="width: 12.5vw;" clearable />
+                <el-input-number v-model="newWithdrawlInfo.withdrawl_amount" style="width: 12.5vw;" :precision="2" :step="0.1" clearable />
             </div>
 
             <template #footer>

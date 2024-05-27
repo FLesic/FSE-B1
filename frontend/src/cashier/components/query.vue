@@ -39,11 +39,8 @@
 
             <el-table-column align="center" label="更改" width="120">
                 <template #default="scope">
-                    <span> {{ scope.row.auto_renew_status}} </span>
-                    <el-button type = "primary" icon = 'Edit' @click="saveInfo(scope.row)">
-                    Ok
-                    </el-button>
-                    <el-button type = "primary" icon = 'Edit' @click="editInfo(scope.row)" v-if="scope.row.deposit_end_date">
+                    <!-- <span> {{ scope.row.deposit_record_id}} </span> -->
+                    <el-button type = "primary" icon = 'Edit' @click="editAuto(scope.row.deposit_record_id)">
                     更改续期状态
                     </el-button>
                 </template>
@@ -121,7 +118,7 @@ export default {
                 deposit_start_date: 0,
                 deposit_end_date: 1,
                 deposit_amount : 100.00,
-                cashier_id: 1
+                cashier_id: 1,
             }],
             withdrawl_records: [{ // 列表项
                 withdrawl_record_id: 1,
@@ -144,6 +141,7 @@ export default {
             DemandDepositVisible:false,
             TimeDepositVisible:false,
             TotalDepositVisible:false,
+            AutoEditVisible:false,
             Search,
             toSearch: '', // 搜索内容
             toQuery:'',
@@ -250,8 +248,16 @@ export default {
             }
             else this.isTransferShow = false
         },
-        editInfo(data) {
+        editAuto(data) {
             console.log(data)
+            // axios.post("/cashier/update-auto-renew/",
+            //     { // 请求体
+            //         record_id: data
+            //     })
+            //     .then(response => {
+            //         ElMessage.success("更改成功") // 显示消息提醒
+            //         this.QueryRecords() // 重新查询存款记录以刷新页面
+            //     })
         }
     },
     mounted() { // 当页面被渲染时

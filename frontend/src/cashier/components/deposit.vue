@@ -45,7 +45,7 @@
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 存款金额：
-                <el-input v-model="newDepositInfo.deposit_amount" style="width: 12.5vw;" clearable />
+                <el-input-number v-model="newDepositInfo.deposit_amount" style="width: 12.5vw;" :precision="2" :step="0.1" clearable />
             </div>
 
             <template #footer>
@@ -68,7 +68,7 @@
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 存款金额：
-                <el-input v-model="newTimeDepositInfo.deposit_amount" style="width: 12.5vw;" clearable />
+                <el-input-number v-model="newTimeDepositInfo.deposit_amount" style="width: 12.5vw;" :precision="2" :step="0.1" clearable />
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 存款期限：
@@ -76,8 +76,10 @@
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 是否自动续期：
-                <el-radio v-model="newTimeDepositInfo.is_auto_renew" label="1">是</el-radio>
-                <el-radio v-model="newTimeDepositInfo.is_auto_renew" label="2">否</el-radio>
+                <el-radio-group  style="margin-left: 10px;" v-model="select">
+                    <el-radio v-model="newTimeDepositInfo.is_auto_renew" label="1">是</el-radio>
+                    <el-radio v-model="newTimeDepositInfo.is_auto_renew" label="2">否</el-radio>
+                </el-radio-group>
             </div>
 
             <template #footer>
@@ -126,6 +128,7 @@ import { ElMessage } from 'element-plus'
 export default {
     data() {
         return {
+            select:1,
             cashierID: 0,
             isShow: false, // 结果表格展示状态
             records: [{ // 列表项
