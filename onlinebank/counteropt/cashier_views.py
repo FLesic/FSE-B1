@@ -28,9 +28,8 @@ def cashier_add(request):
                 is_lost=False,
             )
             new_account.save()
-            #return_data  = {}
-            #return_data['id'] = account.objects.filter()
-            return JsonResponse({"success": "successful operation"}, status=200)
+            return_data = {'id': new_account.account_id}
+            return JsonResponse(return_data, status=200)
         else:
             return JsonResponse({"error": "User not exits"}, status=403)
     elif request.method == 'OPTION':
@@ -90,19 +89,18 @@ def cashier_demand_deposit(request):
         data = json.loads(request.body.decode('utf-8'))
         filter_account = account.objects.filter(account_id=data.get('account_id'), password=data.get('password'))
         if filter_account.exists():
-            if filter_account[0].is_frozen or filter_account[0].is_lost:
+            filter_account = filter_account.first()
+            if filter_account.is_frozen or filter_account.is_lost:
                 return JsonResponse({"error": "账户挂失/冻结"}, status=403)
             # 更新用户存款情况
-            filter_account[0].uncredited_deposit += data.get('deposit_amount')
-            filter_account[0].balance += data.get('deposit_amount')
-            filter_account[0].save()
+            filter_account.uncredited_deposit += data.get('deposit_amount')
+            filter_account.balance += data.get('deposit_amount')
+            filter_account.save()
             # 更新存款记录
             new_deposit_record = deposit_record(
                 account_id=data.get('account_id'),
                 deposit_type='活期存款',
-                # --此处存疑--
                 deposit_start_date=datetime.datetime.now(),
-                # -----
                 deposit_amount=data.get('deposit_amount'),
                 cashier_id=data.get('cashier_id'),
             )
@@ -123,26 +121,28 @@ def cashier_time_deposit(request):
         data = json.loads(request.body.decode('utf-8'))
         filter_account = account.objects.filter(account_id=data.get('account_id'), password=data.get('password'))
         if filter_account.exists():
-            if filter_account[0].is_frozen or filter_account[0].is_lost:
+            filter_account = filter_account.first()
+            if filter_account.is_frozen or filter_account.is_lost:
                 return JsonResponse({"error": "账户挂失/冻结"}, status=403)
             # 更新用户存款情况
-            filter_account[0].current_deposit += data.get('deposit_amount')
-            filter_account[0].balance += data.get('deposit_amount')
-            filter_account[0].save()
-            auto_renew_status = False
-            if data.get('auto_renew_status') == '1':
-                auto_renew_status = True
-            elif data.get('auto_renew_status') == '2':
-                auto_renew_status = False
+            filter_account.current_deposit += data.get('deposit_amount')
+            filter_account.balance += data.get('deposit_amount')
+            filter_account.save()
+            # auto_renew_status = False
+            # print("<<<<<<<<<>>>>>>>>")
+            # print(data.get('auto_renew_status'))
+            # print(type(data.get('auto_renew_status')))
+            # if data.get('auto_renew_status'):
+            #     auto_renew_status = True
+            # elif data.get('auto_renew_status'):
+            #     auto_renew_status = False
             # 更新存款记录
             new_deposit_record = deposit_record(
                 account_id=data.get('account_id'),
                 deposit_type='定期存款',
-                auto_renew_status=auto_renew_status,
-                # --此处存疑--
+                auto_renew_status=data.get('auto_renew_status'),
                 deposit_start_date=datetime.datetime.now(),
                 deposit_end_date=datetime.datetime.now() + datetime.timedelta(days=int(data.get('deposit_term')) * 30),
-                # -----
                 deposit_amount=data.get('deposit_amount'),
                 cashier_id=data.get('cashier_id'),
             )
@@ -202,14 +202,15 @@ def cashier_withdrawl(request):
         data = json.loads(request.body.decode('utf-8'))
         filter_account = account.objects.filter(account_id=data.get('account_id'), password=data.get('password'))
         if filter_account.exists():
-            if filter_account[0].is_frozen or filter_account[0].is_lost:
+            filter_account = filter_account.first()
+            if filter_account.is_frozen or filter_account.is_lost:
                 return JsonResponse({"error": "账户挂失/冻结"}, status=403)
             # 判断用户存款是否满足取出条件
-            if filter_account[0].uncredited_deposit >= data.get('withdrawl_amount'):
+            if filter_account.uncredited_deposit >= data.get('withdrawl_amount'):
                 # 更新用户存款情况
-                filter_account[0].uncredited_deposit -= data.get('withdrawl_amount')
-                filter_account[0].balance -= data.get('withdrawl_amount')
-                filter_account[0].save()
+                filter_account.uncredited_deposit -= data.get('withdrawl_amount')
+                filter_account.balance -= data.get('withdrawl_amount')
+                filter_account.save()
                 # 更新取款记录
                 new_withdrawal_record = withdrawal_record(
                     account_id=data.get('account_id'),
@@ -265,31 +266,32 @@ def cashier_transfer(request):
         filter_in_account = account.objects.filter(account_id=data.get('account_in_id'))
         if not filter_in_account.exists():
             return JsonResponse({"error": "接收转账用户不存在"}, status=403)
-        if filter_out_account.exists():
-            if filter_out_account[0].is_frozen or filter_out_account[0].is_lost:
-                return JsonResponse({"error": "转出账户挂失/冻结"}, status=403)
-            if filter_in_account[0].is_frozen or filter_in_account[0].is_lost:
-                return JsonResponse({"error": "转入账户挂失/冻结"}, status=403)
-            # 判断用户存款是否满足取出条件
-            if filter_out_account[0].uncredited_deposit >= data.get('transfer_amount'):
-                # 更新用户存款情况
-                filter_out_account[0].uncredited_deposit -= data.get('transfer_amount')
-                filter_out_account[0].balance -= data.get('transfer_amount')
-                filter_out_account[0].save()
-                # 更新取款记录
-                new_transfer_record = transfer_record(
-                    account_in_id=data.get('account_in_id'),
-                    account_out_id=data.get('account_out_id'),
-                    # --此处存疑--
-                    transfer_date=datetime.datetime.now(),
-                    # -----
-                    transfer_amount=data.get('transfer_amount'),
-                    cashier_id=data.get('cashier_id'),
-                )
-                new_transfer_record.save()
-                return JsonResponse({"success": "successful operation"}, status=200)
-            else:
-                return JsonResponse({"error": "存款不足"}, status=403)
+        if not filter_out_account.exists():
+            return JsonResponse({"error": "存款不足"}, status=403)
+        filter_in_account = filter_in_account.first()
+        filter_out_account = filter_out_account.first()
+        if filter_out_account.is_frozen or filter_out_account.is_lost:
+            return JsonResponse({"error": "转出账户挂失/冻结"}, status=403)
+        if filter_in_account.is_frozen or filter_in_account.is_lost:
+            return JsonResponse({"error": "转入账户挂失/冻结"}, status=403)
+        # 判断用户存款是否满足取出条件
+        if filter_out_account.uncredited_deposit >= data.get('transfer_amount'):
+            # 更新用户存款情况
+            filter_out_account.uncredited_deposit -= data.get('transfer_amount')
+            filter_out_account.balance -= data.get('transfer_amount')
+            filter_out_account.save()
+            # 更新取款记录
+            new_transfer_record = transfer_record(
+                account_in_id=data.get('account_in_id'),
+                account_out_id=data.get('account_out_id'),
+                # --此处存疑--
+                transfer_date=datetime.datetime.now(),
+                # -----
+                transfer_amount=data.get('transfer_amount'),
+                cashier_id=data.get('cashier_id'),
+            )
+            new_transfer_record.save()
+            return JsonResponse({"success": "successful operation"}, status=200)
         else:
             return JsonResponse({"error": "转账用户不存在"}, status=403)
     elif request.method == 'OPTION':
@@ -301,16 +303,26 @@ def cashier_transfer(request):
 # 查询所有交易记录
 def cashier_all_records(request):
     if request.method == 'GET':
-        dic = {}
-        dic['account_id'] = int(request.GET.get('account_id'))
+        # print(type(request.GET.get('type')))
         if request.GET.get('type') == '1':
+            dic = {}
+            dic['account_id'] = int(request.GET.get('account_id'))
             deposit_record_list = get_deposit_record_list(dic)
             return JsonResponse(deposit_record_list, safe=False)
         elif request.GET.get('type') == '2':
+            dic = {}
+            dic['account_id'] = int(request.GET.get('account_id'))
             with_drawls_record_list = get_with_drawls_record_list(dic)
             return JsonResponse(with_drawls_record_list, safe=False)
         elif request.GET.get('type') == '3':
-            transfer_record_list = get_transfer_record_list(dic)
+            dic_in = {}
+            dic_out = {}
+            dic_in['account_in_id'] = int(request.GET.get('account_id'))
+            dic_out['account_out_id'] = int(request.GET.get('account_id'))
+            transfer_record_list_in = get_transfer_record_list(dic_in)
+            transfer_record_list_out = get_transfer_record_list(dic_out)
+            transfer_record_list = transfer_record_list_in + transfer_record_list_out
+            print(transfer_record_list)
             return JsonResponse(transfer_record_list, safe=False)
         return JsonResponse({"error": "传入参数错误"}, status=403)
     else:
