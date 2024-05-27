@@ -133,6 +133,7 @@ export default {
             TotalDepositVisible:false,
             Search,
             toSearch: '', // 搜索内容
+            toQuery:'',
             newDepositInfo: { // 待新建存款信息
                 account_id: '',
                 password: '',
@@ -203,7 +204,8 @@ export default {
             this.transfer_record = []
             let response = await axios.get('/all-records/', { 
                 params: { 
-                    type:this.select
+                    type:this.select,
+                    account_id:this.toQuery
                 } 
             }) 
             let records = response.data // 获取响应负载
