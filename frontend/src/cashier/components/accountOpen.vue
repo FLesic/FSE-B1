@@ -16,8 +16,7 @@
     </div>
     <div style="height: 20px"></div>
     <div style = "margin-left: 4.3vw; font-weight: bold; font-size: 1rem; margin-top: 5px; ">
-      <el-button type="primary" style="margin-left: 57px" @click="newAccount.identity_card = identity_card,
-      newAccount.password = password, openNewAccount"
+      <el-button type="primary" style="margin-left: 57px" @click="openNewAccount"
         :disabled="newAccount.identity_card.length === 0 || newAccount.password.length === 0">开设账户</el-button>
     </div>
     <!-- 新建账户对话框 -->
@@ -88,6 +87,8 @@ export default {
       this.cashierID = params.get('cashierID');
     },
     openNewAccount(){
+      this.newAccount.identity_card = this.identity_card,
+      this.newAccount.password = this.password, 
       axios.post('/cashier/add', {
         identity_card: this.newAccount.identity_card,
         password: this.newAccount.password,

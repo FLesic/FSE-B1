@@ -46,14 +46,6 @@ def add_cashier(request):
         if data.get("sex") == "男":
             sex = 0
         else: sex = 1
-        can_trade = True
-        if data.get("ifTrade") == "True":
-            can_trade = True
-        else: can_trade = False
-        can_manage = True
-        if data.get("ifManage") == "True":
-            can_manage = True
-        else: can_manage = False
         new_employee = employee(employee_name = data.get("name"), 
                              identity_card = data.get("identity_card"),
                              employee_sex = sex,
@@ -64,8 +56,8 @@ def add_cashier(request):
         new_cashier = cashier(employee = new_employee,
                               account = data.get("account"),
                               password = data.get("password"),
-                              trade_authority = can_trade,
-                              manage_authority = can_manage)
+                              trade_authority = data.get("trade_authority"),
+                              manage_authority = data.get("manage_authority"))
         new_cashier.save()
         return JsonResponse({"success": "successful operation"}, status = 200)
     elif request.method == 'OPTIONS':
