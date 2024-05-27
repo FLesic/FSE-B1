@@ -18,7 +18,7 @@
     </div>
 
     <!-- 存款记录 -->
-    <div class="cashierBox" v-for="record in records" :key="record.deposit_record_id">
+    <!-- <div class="cashierBox" v-for="record in records" :key="record.deposit_record_id"> -->
         <el-table v-if="isShow" :data="fitlerTableData" height="600"
         :default-sort="{ prop: 'deposit_record_id', order: 'ascending' }" :table-layout="'auto'"
         style="width: 100%; margin-left: 50px; margin-top: 30px; margin-right: 50px; max-width: 80vw;">
@@ -31,7 +31,7 @@
         <el-table-column prop="deposit_amount" label="存款金额" />
         <el-table-column prop="cashier_id" label="出纳员ID" />
         </el-table>
-    </div>
+    <!-- </div> -->
 
         <el-dialog v-model="DemandDepositVisible" title="活期存款" width="30%" align-center>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
@@ -40,7 +40,7 @@
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 密码：
-                <el-input v-model="newDepositInfo.password" style="width: 12.5vw;" clearable />
+                <el-input v-model="newDepositInfo.password" style="width: 12.5vw;" show-password/>
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 存款金额：
@@ -63,7 +63,7 @@
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 密码：
-                <el-input v-model="newTimeDepositInfo.password" style="width: 12.5vw;" clearable />
+                <el-input v-model="newTimeDepositInfo.password" style="width: 12.5vw;" show-password/>
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 存款金额：
@@ -75,9 +75,9 @@
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 是否自动续期：
-                <el-radio-group  style="margin-left: 10px;" v-model="select">
-                    <el-radio v-model="newTimeDepositInfo.is_auto_renew" label="1">是</el-radio>
-                    <el-radio v-model="newTimeDepositInfo.is_auto_renew" label="2">否</el-radio>
+                <el-radio-group  style="margin-left: 10px;" v-model="newTimeDepositInfo.is_auto_renew">
+                    <el-radio v-model="newTimeDepositInfo.is_auto_renew" value="1">是</el-radio>
+                    <el-radio v-model="newTimeDepositInfo.is_auto_renew" value="2">否</el-radio>
                 </el-radio-group>
             </div>
 
@@ -97,7 +97,7 @@
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 密码：
-                <el-input v-model="totalDepositInfo.password" style="width: 12.5vw;" clearable />
+                <el-input v-model="totalDepositInfo.password" style="width: 12.5vw;" show-password/>
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 累计存款：
@@ -127,7 +127,7 @@ import { ElMessage } from 'element-plus'
 export default {
     data() {
         return {
-            select:1,
+            select:0,
             cashierID: 0,
             isShow: false, // 结果表格展示状态
             records: [{ // 列表项
@@ -155,7 +155,7 @@ export default {
                 password: '',
                 deposit_amount: 0,
                 deposit_term: 0,
-                is_auto_renew: false
+                is_auto_renew: true
             },
             totalDepositInfo: {
                 account_id: '',
@@ -214,8 +214,14 @@ export default {
                     this.DemandDepositVisible = false // 将对话框设置为不可见
                     this.QueryDeposits() // 重新查询存款记录以刷新页面
                 })
+            this.newDepositInfo = { // 待新建活期存款信息
+                account_id: '',
+                password: '',
+                deposit_amount: 0
+            }
         },
         setNewTimeDeposit() {
+            console.log(this.newTimeDepositInfo.is_auto_renew)
             axios.post("/cashier/time-deposit/",
                 { // 请求体
                     account_id: this.newTimeDepositInfo.account_id,
@@ -230,6 +236,13 @@ export default {
                     this.TimeDepositVisible = false // 将对话框设置为不可见
                     this.QueryDeposits() // 重新查询存款记录以刷新页面
                 })
+            this.newTimeDepositInfo = {// 待新建定期存款信息
+                account_id: '',
+                password: '',
+                deposit_amount: 0,
+                deposit_term: 0,
+                is_auto_renew: true
+            }
         },
         async getTotalDeposit() {
             let response = await axios.get('/cashier/total-deposit/', { 
@@ -240,6 +253,10 @@ export default {
             }) 
             this.total_amount = response.data.total_amount // 获取响应负载
             console.log(response.data.total_amount)
+            this.totalDepositInfo = {
+                account_id: '',
+                password: ''
+            }
         }
     },
     mounted() { // 当页面被渲染时
