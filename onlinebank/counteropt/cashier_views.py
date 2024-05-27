@@ -322,7 +322,7 @@ def cashier_all_records(request):
             transfer_record_list_in = get_transfer_record_list(dic_in)
             transfer_record_list_out = get_transfer_record_list(dic_out)
             transfer_record_list = transfer_record_list_in + transfer_record_list_out
-            print(transfer_record_list)
+            # print(transfer_record_list)
             return JsonResponse(transfer_record_list, safe=False)
         return JsonResponse({"error": "传入参数错误"}, status=403)
     else:
