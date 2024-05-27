@@ -36,6 +36,28 @@
             <el-table-column v-if="isDepositShow" prop="deposit_end_date" label="存款终止日期" />
             <el-table-column v-if="isDepositShow" prop="deposit_amount" label="存款金额" />
             <el-table-column v-if="isDepositShow" prop="cashier_id" label="出纳员ID" />
+            <el-table-column align="center" label="更改" width="120">
+                <!-- <template slot-scope="{ row }">
+                    <el-button
+                    v-if="row.editable"
+                    type="success"
+                    size="small"
+                    icon="el-icon-circle-check-outline"
+                    @click="saveInfo(row)"
+                    >
+                    Ok
+                    </el-button>
+                    <el-button
+                    v-else
+                    type="primary"
+                    size="small"
+                    icon="el-icon-edit"
+                    @click="editInfo(row)"
+                    >
+                    Update
+                    </el-button>
+                </template> -->
+            </el-table-column>
             <!-- <el-table-column label="操作">
                 <template #default="scope">
                     <el-button :disabled="scope.row.returnTime !== '0' " link type="primary" size="small" @click="returnBook(scope.row)" v-model="returnBookVisible">还书</el-button>
@@ -199,9 +221,11 @@ export default {
             this.cashierID = params.get('cashierID');
         },
         async QueryRecords() {
-            this.deposit_records = [],
+            // console.log(this.deposit_records)
+            // this.deposit_records = [],
             this.withdrawl_records = [],
             this.transfer_record = []
+<<<<<<< Updated upstream
             let response = await axios.get('/cashier/all-records/', { 
                 params: { 
                     type:this.select,
@@ -214,6 +238,20 @@ export default {
                 records.forEach(record => { // 对于每一个借书记录
                 this.deposit_records.push(record) // 将它加入到列表项中
                 });
+=======
+            // let response = await axios.get('/all-records/', { 
+            //     params: { 
+            //         type:this.select,
+            //         account_id:this.toQuery
+            //     } 
+            // }) 
+            // let records = response.data // 获取响应负载
+            //存款记录
+            if(this.select === 1) {
+                // records.forEach(record => { // 对于每一个借书记录
+                // this.deposit_records.push(record) // 将它加入到列表项中
+                // });
+>>>>>>> Stashed changes
                 this.isDepositShow = true // 显示结果列表
             }
             else this.isDepositShow = false
