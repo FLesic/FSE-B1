@@ -52,9 +52,9 @@ class deposit_record(models.Model):
     deposit_record_id = models.AutoField(primary_key = True)
     account_id = models.IntegerField(null = False)
     deposit_type = models.CharField(max_length = 10, null = False)
-    auto_renew_status = models.BooleanField()
+    auto_renew_status = models.BooleanField(null = True)
     deposit_start_date = models.DateField(null = False)
-    deposit_end_date = models.DateField()
+    deposit_end_date = models.DateField(null = True)
     deposit_amount = models.FloatField(null = False)
     cashier_id = models.IntegerField(null = False)
 

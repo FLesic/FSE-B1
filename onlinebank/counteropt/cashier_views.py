@@ -65,7 +65,7 @@ def get_deposit_record_list(dic):
         deposit_return['auto_renew_status'] = deposit.auto_renew_status
         deposit_return['deposit_start_date'] = deposit.deposit_start_date
         deposit_return['deposit_end_date'] = deposit.deposit_end_date
-        deposit_return['deposit_amount'] = deposit.deposit_ammount
+        deposit_return['deposit_amount'] = deposit.deposit_amount
         deposit_return['cashier_id'] = deposit.cashier_id
         deposit_record_list.append(deposit_return)
     return deposit_record_list
@@ -296,20 +296,20 @@ def cashier_all_records(request):
     if request.method == 'GET':
         dic = {}
         dic['account_id'] = int(request.GET.get('account_id'))
-        if request.GET.get('type') == 1:
+        if request.GET.get('type') == '1':
             deposit_record_list = get_deposit_record_list(dic)
             return JsonResponse(deposit_record_list, safe=False)
-        elif request.GET.get('type') == 2:
+        elif request.GET.get('type') == '2':
             with_drawls_record_list = get_with_drawls_record_list(dic)
             return JsonResponse(with_drawls_record_list, safe=False)
-        elif request.GET.get('type') == 3:
+        elif request.GET.get('type') == '3':
             transfer_record_list = get_transfer_record_list(dic)
             return JsonResponse(transfer_record_list, safe=False)
         return JsonResponse({"error": "传入参数错误"}, status=403)
     else:
         return JsonResponse({"error": "Method not allowed"}, status=405)
 
-
+@csrf_exempt
 def cashier_unfreeze(request):
     if request.method == "POST":
         data = json.loads(request.body.decode('utf-8'))
@@ -321,7 +321,7 @@ def cashier_unfreeze(request):
         return JsonResponse({"success": "OPTION operation"}, status = 200)
     else: return JsonResponse({"error": "Method not allowed"}, status = 405)
 
-
+@csrf_exempt
 def cashier_freeze(request):
     if request.method == "POST":
         data = json.loads(request.body.decode('utf-8'))
@@ -333,7 +333,7 @@ def cashier_freeze(request):
         return JsonResponse({"success": "OPTION operation"}, status = 200)
     else: return JsonResponse({"error": "Method not allowed"}, status = 405)
 
-
+@csrf_exempt
 def cashier_reportloss(request):
     if request.method == "POST":
         data = json.loads(request.body.decode('utf-8'))
@@ -345,7 +345,7 @@ def cashier_reportloss(request):
         return JsonResponse({"success": "OPTION operation"}, status = 200)
     else: return JsonResponse({"error": "Method not allowed"}, status = 405)
 
-
+@csrf_exempt
 def cashier_reissue(request):
     if request.method == "POST":
         data = json.loads(request.body.decode('utf-8'))

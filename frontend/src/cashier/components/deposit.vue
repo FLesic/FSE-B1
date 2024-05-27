@@ -204,8 +204,8 @@ export default {
                 { // 请求体
                     account_id: this.newDepositInfo.account_id,
                     password: this.newDepositInfo.password,
-                    deposit_amount : this.newDepositInfo.deposit_amount,
-                    cashier_id: this.Cashier_ID       
+                    deposit_amount : parseFloat(this.newDepositInfo.deposit_amount),
+                    cashier_id: this.cashierID 
                 })
                 .then(response => {
                     ElMessage.success("新建活期存款成功") // 显示消息提醒
@@ -236,11 +236,16 @@ export default {
                     password: this.totalDepositiInfo.password
                 } 
             }) 
-            this.total_amount = response.data // 获取响应负载
+            this.total_amount = response.data.total_amount // 获取响应负载
+            console.log(response.data.total_amount)
         }
     },
     mounted() { // 当页面被渲染时
         this.QueryDeposits() // 查询存款记录
+        console.log(this.cashierID)
+    },
+    created() {
+        this.fetchDataFromUrl()   
     }
 
 }

@@ -202,7 +202,7 @@ export default {
             this.deposit_records = [],
             this.withdrawl_records = [],
             this.transfer_record = []
-            let response = await axios.get('/all-records/', { 
+            let response = await axios.get('/cashier/all-records/', { 
                 params: { 
                     type:this.select,
                     account_id:this.toQuery
@@ -211,7 +211,7 @@ export default {
             let records = response.data // 获取响应负载
             //存款记录
             if(this.select === 1) {
-                recordss.forEach(record => { // 对于每一个借书记录
+                records.forEach(record => { // 对于每一个借书记录
                 this.deposit_records.push(record) // 将它加入到列表项中
                 });
                 this.isDepositShow = true // 显示结果列表
@@ -220,7 +220,7 @@ export default {
 
             //取款记录
             if(this.select === 2) {
-                recordss.forEach(record => { // 对于每一个借书记录
+                records.forEach(record => { // 对于每一个借书记录
                 this.withdrawl_records.push(record) // 将它加入到列表项中
                 });
                 this.isWithdrawlShow = true // 显示结果列表
@@ -229,7 +229,7 @@ export default {
 
             //转账记录
             if(this.select === 3) {
-                recordss.forEach(record => { // 对于每一个借书记录
+                records.forEach(record => { // 对于每一个借书记录
                 this.transfer_records.push(record) // 将它加入到列表项中
                 });
                 this.isTransferShow = true // 显示结果列表
