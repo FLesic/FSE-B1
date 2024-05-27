@@ -42,6 +42,9 @@ def add_cashier(request):
     if request.method == 'POST':
         # data是一个字典，可以用.get()访问键值对
         data = json.loads(request.body.decode('utf-8'))
+        check_account = data.get("account")
+        if cashier.objects.filter(account = check_account).exists():
+            return JsonResponse({"error": "出纳员账户已存在"}, status = 403)
         sex = 0
         if data.get("sex") == "男":
             sex = 0
@@ -59,6 +62,7 @@ def add_cashier(request):
                               trade_authority = data.get("trade_authority"),
                               manage_authority = data.get("manage_authority"))
         new_cashier.save()
+        print(JsonResponse({"success": "successful operation"}, status = 200))
         return JsonResponse({"success": "successful operation"}, status = 200)
     elif request.method == 'OPTIONS':
         return JsonResponse({"success": "OPTION operation"}, status = 200)

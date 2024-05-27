@@ -251,9 +251,13 @@ export default{
             trade_authority: this.newCashierInfo.ifTrade,
       })
       .then(response => {
-            ElMessage.success("出纳员添加成功")
+            //ElMessage.success("出纳员添加成功")
+            ElMessage.success(response.data.success)
             this.newCashierVisible = false
             this.QueryCashiers()
+      })
+      .catch(error => {
+          ElMessage.error(error.response.data.error)
       })
     },
     ConfirmModBaseCashier() {
