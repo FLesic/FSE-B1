@@ -214,7 +214,7 @@ export default {
             this.deposit_records = [],
             this.withdrawl_records = [],
             this.transfer_record = []
-            let response = await axios.get('/all-records/', { 
+            let response = await axios.get('/cashier/all-records/', { 
                 params: { 
                     type:this.select,
                     account_id:this.toQuery
