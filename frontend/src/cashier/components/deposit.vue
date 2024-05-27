@@ -230,7 +230,7 @@ export default {
                 })
         },
         async getTotalDeposit() {
-            let response = await axios.get('/borrow', { 
+            let response = await axios.get('/total-deposit/', { 
                 params: { 
                     account_id: this.totalDepositiInfo.account_id,
                     password: this.totalDepositiInfo.password
