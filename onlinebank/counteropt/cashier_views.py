@@ -368,9 +368,28 @@ def cashier_reportloss(request):
 def cashier_reissue(request):
     if request.method == "POST":
         data = json.loads(request.body.decode('utf-8'))
-        delete_account = account.objects.get(account_id = data.get("accountID"))
+        delete_account = account.objects.get(account_id = data.get("account"))
+        old_id = delete_account.account_id
+        new_account = account(
+            password = delete_account.password,
+            identity_card = delete_account.identity_card,
+            card_type = delete_account.card_type,
+            balance = delete_account.balance,
+            current_deposit = delete_account.current_deposit,
+            uncredited_deposit = delete_account.uncredited_deposit,
+            is_frozen = False,
+            is_lost = False
+        )
+        new_account.save()
+        new_id = new_account.account_id
+        deposit_record.objects.filter(account_id = old_id).update(account_id = new_id)
+        withdrawal_record.objects.filter(account_id = old_id).update(account_id = new_id)
+        transfer_record.objects.filter(account_in_id = old_id).update(account_in_id = new_id)
+        transfer_record.objects.filter(account_out_id = old_id).update(account_out_id = new_id)
+        
         delete_account.delete()
-        return JsonResponse({"success": "successful operation"}, status = 200)
+        rs = {"accountID": new_id}
+        return JsonResponse(rs, safe=False)
     elif request.method == 'OPTIONS':
         return JsonResponse({"success": "OPTION operation"}, status = 200)
     else: return JsonResponse({"error": "Method not allowed"}, status = 405)
