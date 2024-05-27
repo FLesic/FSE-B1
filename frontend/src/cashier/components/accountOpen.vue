@@ -50,6 +50,7 @@
 <script>
 
 import axios from "axios";
+import {ElMessage} from "element-plus";
 
 export default {
   created() {
@@ -60,7 +61,7 @@ export default {
       cashierID: 0,
       identity_card: '',
       password: '',
-      openAccountVisible: false,
+      openAccountVisible: true,
       newAccount:
           {
             id: 3,
@@ -96,6 +97,9 @@ export default {
       }).then(response => {
         this.openAccountVisible = true
         this.newAccount.id = response.data.id
+      }).catch(response => {
+        ElMessage.error(response.data.error);
+        this.openAccountVisible = false
       })
     }
   }

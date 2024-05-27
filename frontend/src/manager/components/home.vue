@@ -40,7 +40,10 @@
           </div>
         </div>
       </div>
-      <el-button class="newCashierBox" @click="newCashierVisible = true">
+      <el-button class="newCashierBox" @click="newCashierVisible = true,
+newCashierInfo.id = '', newCashierInfo.name = '', newCashierInfo.identity_card = '',
+newCashierInfo.account = '', newCashierInfo.password = '', newCashierInfo.sex = '男',
+newCashierInfo.phone = '', newCashierInfo.ifTrade = false, newCashierInfo.ifManage = false">
         <el-icon style="height: 50px; width: 50px;">
           <Plus style="height: 100%; width: 100%;" />
         </el-icon>
