@@ -24,7 +24,7 @@
     </div>
 
     <!-- 存款记录 -->
-    <div class="cashierBox" v-for="deposit_record in deposit_records" :key="deposit_record.deposit_record_id">
+    <!-- <div class="cashierBox" v-for="deposit_record in deposit_records" :key="deposit_record.deposit_record_id"> -->
         <el-table v-if="isDepositShow" :data="fitlerTableData_Deposit" height="600"
             :default-sort="{ prop: 'deposit_record_id', order: 'ascending' }" :table-layout="'auto'"
             style="width: 100%; margin-left: 50px; margin-top: 30px; margin-right: 50px; max-width: 80vw;">
@@ -51,10 +51,10 @@
                 </template>
             </el-table-column> -->
         </el-table>
-    </div>
+    <!-- </div> -->
 
     <!-- 取款记录 -->
-    <div class="cashierBox" v-for="withdrawl_record in withdrawl_records" :key="withdrawl_record.withdrawl_record_id">
+    <!-- <div class="cashierBox" v-for="withdrawl_record in withdrawl_records" :key="withdrawl_record.withdrawl_record_id"> -->
     <el-table v-if="isWithdrawlShow" :data="fitlerTableData_Withdrawl" height="600"
         :default-sort="{ prop: 'withdrawl_record_id', order: 'ascending' }" :table-layout="'auto'"
         style="width: 100%; margin-left: 50px; margin-top: 30px; margin-right: 50px; max-width: 80vw;">
@@ -69,10 +69,10 @@
             </template>
         </el-table-column> -->
     </el-table>
-    </div>
+    <!-- </div> -->
 
     <!-- 转账记录 -->
-    <div class="cashierBox" v-for="transfer_record in transfer_records" :key="transfer_record.transfer_record_id">
+    <!-- <div class="cashierBox" v-for="transfer_record in transfer_records" :key="transfer_record.transfer_record_id"> -->
     <el-table v-if="isTransferShow" :data="fitlerTableData_Transfer" height="600"
         :default-sort="{ prop: 'withdrawl_record_id', order: 'ascending' }" :table-layout="'auto'"
         style="width: 100%; margin-left: 50px; margin-top: 30px; margin-right: 50px; max-width: 80vw;">
@@ -88,7 +88,7 @@
             </template>
         </el-table-column> -->
     </el-table>
-    </div>
+    <!-- </div> -->
 
 
     </el-scrollbar>
@@ -213,7 +213,7 @@ export default {
             // console.log(this.deposit_records)
             this.deposit_records = [],
             this.withdrawl_records = [],
-            this.transfer_record = []
+            this.transfer_records = []
             let response = await axios.get('/cashier/all-records/', { 
                 params: { 
                     type:this.select,

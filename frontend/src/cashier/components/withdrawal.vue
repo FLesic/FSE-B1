@@ -18,7 +18,7 @@
     </div>
 
     <!-- 取款记录 -->
-    <div class="cashierBox" v-for="record in records" :key="record.withdrawl_record_id">
+    <!-- <div class="cashierBox" v-for="record in records" :key="record.withdrawl_record_id"> -->
         <el-table v-if="isShow" :data="fitlerTableData" height="600"
             :default-sort="{ prop: 'withdrawl_record_id', order: 'ascending' }" :table-layout="'auto'"
             style="width: 100%; margin-left: 50px; margin-top: 30px; margin-right: 50px; max-width: 80vw;">
@@ -28,7 +28,7 @@
             <el-table-column prop="withdrawl_amount" label="取款金额" />
             <el-table-column prop="cashier_id" label="出纳员ID" />
         </el-table>
-    </div>
+    <!-- </div> -->
 
         <el-dialog v-model="WithdrawlVisible" title="取款服务" width="30%" align-center>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
@@ -37,7 +37,7 @@
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 密码：
-                <el-input v-model="newWithdrawlInfo.password" style="width: 12.5vw;" clearable />
+                <el-input v-model="newWithdrawlInfo.password" style="width: 12.5vw;" show-password/>
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 取款金额：
