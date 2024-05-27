@@ -17,7 +17,11 @@
     <div style="height: 20px"></div>
     <div style = "margin-left: 4.3vw; font-weight: bold; font-size: 1rem; margin-top: 5px; ">
       <el-button type="primary" style="margin-left: 57px" @click="openNewAccount"
+<<<<<<< HEAD
         :disabled="identity_card.length === 0 || password.length === 0">开设账户</el-button>
+=======
+        :disabled="newAccount.identity_card.length === 0 || newAccount.password.length === 0">开设账户</el-button>
+>>>>>>> dc44497bbd241db1cfa9001c610df362aa314bff
     </div>
     <!-- 新建账户对话框 -->
     <el-dialog v-model="openAccountVisible" width = "30%" align-center>
