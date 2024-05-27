@@ -14,6 +14,9 @@ def cashier_add(request):
         data = json.loads(request.body.decode('utf-8'))
         filter_online_user = online_user.objects.filter(identity_card=data.get('identity_card'))
         if filter_online_user.exists():
+            filter_account = account.objects.filter(identity_card=filter_online_user[0])
+            if filter_account.count() >= 4:
+                return JsonResponse({"error": "账户数量超过限制"}, status=403)
             new_account = account(
                 password=data.get('password'),
                 identity_card=filter_online_user[0],
@@ -51,8 +54,8 @@ def cashier_query_account(request):
         return JsonResponse({"error": "Method not allowed"}, status=405)
 
 
-def get_deposit_record_list():
-    deposits = deposit_record.objects.all()
+def get_deposit_record_list(dic):
+    deposits = deposit_record.objects.filter(**dic)
     deposit_record_list = list()
     for deposit in deposits:
         deposit_return = {}
@@ -71,7 +74,8 @@ def get_deposit_record_list():
 # 查询所有的存款记录
 def cashier_all_deposits(request):
     if request.method == 'GET':
-        deposit_record_list = get_deposit_record_list()
+        dic = {}
+        deposit_record_list = get_deposit_record_list(dic)
         return JsonResponse(deposit_record_list, safe=False)
     else:
         return JsonResponse({"error": "Method not allowed"}, status=405)
@@ -84,6 +88,8 @@ def cashier_demand_deposit(request):
         data = json.loads(request.body.decode('utf-8'))
         filter_account = account.objects.filter(account_id=data.get('account_id'), password=data.get('password'))
         if filter_account.exists():
+            if filter_account[0].is_frozen or filter_account[0].is_lost:
+                return JsonResponse({"error": "账户挂失/冻结"}, status=403)
             # 更新用户存款情况
             filter_account[0].uncredited_deposit += data.get('deposit_amount')
             filter_account[0].balance += data.get('deposit_amount')
@@ -115,6 +121,8 @@ def cashier_time_deposit(request):
         data = json.loads(request.body.decode('utf-8'))
         filter_account = account.objects.filter(account_id=data.get('account_id'), password=data.get('password'))
         if filter_account.exists():
+            if filter_account[0].is_frozen or filter_account[0].is_lost:
+                return JsonResponse({"error": "账户挂失/冻结"}, status=403)
             # 更新用户存款情况
             filter_account[0].current_deposit += data.get('deposit_amount')
             filter_account[0].balance += data.get('deposit_amount')
@@ -126,7 +134,7 @@ def cashier_time_deposit(request):
                 auto_renew_status=data.get('auto_renew_status'),
                 # --此处存疑--
                 deposit_start_date=datetime.datetime.now(),
-                # deposit_end_date=datetime.datetime.now(),
+                deposit_end_date=datetime.datetime.now() + data.get('deposit_term'),
                 # -----
                 deposit_amount=data.get('deposit_amount'),
                 cashier_id=data.get('cashier_id'),
@@ -156,8 +164,8 @@ def cashier_total_deposit(request):
         return JsonResponse({"error": "Method not allowed"}, status=405)
 
 
-def get_with_drawls_record_list():
-    with_drawls = withdrawal_record.objects.all()
+def get_with_drawls_record_list(dic):
+    with_drawls = withdrawal_record.objects.filter(**dic)
     with_drawls_record_list = list()
     for with_drawl in with_drawls:
         with_drawls_return = {}
@@ -173,7 +181,8 @@ def get_with_drawls_record_list():
 # 查询所有取款记录
 def cashier_all_withdrawls(request):
     if request.method == 'GET':
-        with_drawls_record_list = get_with_drawls_record_list()
+        dic = {}
+        with_drawls_record_list = get_with_drawls_record_list(dic)
         return JsonResponse(with_drawls_record_list, safe=False)
     else:
         return JsonResponse({"error": "Method not allowed"}, status=405)
@@ -186,6 +195,8 @@ def cashier_withdrawl(request):
         data = json.loads(request.body.decode('utf-8'))
         filter_account = account.objects.filter(account_id=data.get('account_id'), password=data.get('password'))
         if filter_account.exists():
+            if filter_account[0].is_frozen or filter_account[0].is_lost:
+                return JsonResponse({"error": "账户挂失/冻结"}, status=403)
             # 判断用户存款是否满足取出条件
             if filter_account[0].uncredited_deposit >= data.get('withdrawl_amount'):
                 # 更新用户存款情况
@@ -213,8 +224,8 @@ def cashier_withdrawl(request):
         return JsonResponse({"error": "Method not allowed"}, status=405)
 
 
-def get_transfer_record_list():
-    transfers = transfer_record.objects.all()
+def get_transfer_record_list(dic):
+    transfers = transfer_record.objects.filter(**dic)
     transfer_record_list = list()
     for transfer in transfers:
         transfers_return = {}
@@ -231,7 +242,8 @@ def get_transfer_record_list():
 # 转账记录查询
 def cashier_all_transfers(request):
     if request.method == 'GET':
-        transfer_record_list = get_transfer_record_list()
+        dic = {}
+        transfer_record_list = get_transfer_record_list(dic)
         return JsonResponse(transfer_record_list, safe=False)
     else:
         return JsonResponse({"error": "Method not allowed"}, status=405)
@@ -247,6 +259,10 @@ def cashier_transfer(request):
         if not filter_in_account.exists():
             return JsonResponse({"error": "接收转账用户不存在"}, status=403)
         if filter_out_account.exists():
+            if filter_out_account[0].is_frozen or filter_out_account[0].is_lost:
+                return JsonResponse({"error": "转出账户挂失/冻结"}, status=403)
+            if filter_in_account[0].is_frozen or filter_in_account[0].is_lost:
+                return JsonResponse({"error": "转入账户挂失/冻结"}, status=403)
             # 判断用户存款是否满足取出条件
             if filter_out_account[0].uncredited_deposit >= data.get('transfer_amount'):
                 # 更新用户存款情况
@@ -278,14 +294,16 @@ def cashier_transfer(request):
 # 查询所有交易记录
 def cashier_all_records(request):
     if request.method == 'GET':
+        dic = {}
+        dic['account_id'] = int(request.GET.get('account_id'))
         if request.GET.get('type') == 1:
-            deposit_record_list = get_deposit_record_list()
+            deposit_record_list = get_deposit_record_list(dic)
             return JsonResponse(deposit_record_list, safe=False)
         elif request.GET.get('type') == 2:
-            with_drawls_record_list = get_with_drawls_record_list()
+            with_drawls_record_list = get_with_drawls_record_list(dic)
             return JsonResponse(with_drawls_record_list, safe=False)
         elif request.GET.get('type') == 3:
-            transfer_record_list = get_transfer_record_list()
+            transfer_record_list = get_transfer_record_list(dic)
             return JsonResponse(transfer_record_list, safe=False)
         return JsonResponse({"error": "传入参数错误"}, status=403)
     else:
