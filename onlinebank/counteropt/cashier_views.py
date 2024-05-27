@@ -28,6 +28,8 @@ def cashier_add(request):
                 is_lost=False,
             )
             new_account.save()
+            #return_data  = {}
+            #return_data['id'] = account.objects.filter()
             return JsonResponse({"success": "successful operation"}, status=200)
         else:
             return JsonResponse({"error": "User not exits"}, status=403)

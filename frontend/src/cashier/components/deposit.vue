@@ -32,7 +32,6 @@
         <el-table-column prop="cashier_id" label="出纳员ID" />
         </el-table>
     </div>
-    
 
         <el-dialog v-model="DemandDepositVisible" title="活期存款" width="30%" align-center>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
@@ -233,10 +232,10 @@ export default {
                 })
         },
         async getTotalDeposit() {
-            let response = await axios.get('/total-deposit/', { 
+            let response = await axios.get('/cashier/total-deposit/', { 
                 params: { 
-                    account_id: this.totalDepositiInfo.account_id,
-                    password: this.totalDepositiInfo.password
+                    account_id: this.totalDepositInfo.account_id,
+                    password: this.totalDepositInfo.password
                 } 
             }) 
             this.total_amount = response.data.total_amount // 获取响应负载

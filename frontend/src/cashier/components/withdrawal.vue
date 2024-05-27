@@ -125,7 +125,7 @@ export default {
             this.isShow = true // 显示结果列表
         },
         setNewWithdrawl() {
-            axios.post("/cashier/withdarwl/",
+            axios.post("/cashier/withdrawl/",
                 { // 请求体
                     account_id: this.newWithdrawlInfo.account_id,
                     password: this.newWithdrawlInfo.password,
