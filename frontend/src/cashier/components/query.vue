@@ -211,21 +211,21 @@ export default {
         },
         async QueryRecords() {
             // console.log(this.deposit_records)
-            // this.deposit_records = [],
+            this.deposit_records = [],
             this.withdrawl_records = [],
             this.transfer_record = []
-            // let response = await axios.get('/all-records/', { 
-            //     params: { 
-            //         type:this.select,
-            //         account_id:this.toQuery
-            //     } 
-            // }) 
-            // let records = response.data // 获取响应负载
+            let response = await axios.get('/all-records/', { 
+                params: { 
+                    type:this.select,
+                    account_id:this.toQuery
+                } 
+            }) 
+            let records = response.data // 获取响应负载
             //存款记录
             if(this.select === 1) {
-                // records.forEach(record => { // 对于每一个借书记录
-                // this.deposit_records.push(record) // 将它加入到列表项中
-                // });
+                records.forEach(record => { // 对于每一个借书记录
+                this.deposit_records.push(record) // 将它加入到列表项中
+                });
                 this.isDepositShow = true // 显示结果列表
             }
             else this.isDepositShow = false
@@ -250,14 +250,14 @@ export default {
         },
         editAuto(data) {
             console.log(data)
-            // axios.post("/cashier/update-auto-renew/",
-            //     { // 请求体
-            //         record_id: data
-            //     })
-            //     .then(response => {
-            //         ElMessage.success("更改成功") // 显示消息提醒
-            //         this.QueryRecords() // 重新查询存款记录以刷新页面
-            //     })
+            axios.post("/cashier/update-auto-renew/",
+                { // 请求体
+                    record_id: data
+                })
+                .then(response => {
+                    ElMessage.success("更改成功") // 显示消息提醒
+                    this.QueryRecords() // 重新查询存款记录以刷新页面
+                })
         }
     },
     mounted() { // 当页面被渲染时
