@@ -220,7 +220,7 @@ export default {
                     password: this.newTimeDepositInfo.password,
                     auto_renew_status: this.newTimeDepositInfo.is_auto_renew,
                     deposit_term: this.newTimeDepositInfo.deposit_term,
-                    deposit_amount : this.newTimeDepositInfo.deposit_amount,
+                    deposit_amount : parseFloat(this.newTimeDepositInfo.deposit_amount),
                     cashier_id: this.cashierID      
                 })
                 .then(response => {

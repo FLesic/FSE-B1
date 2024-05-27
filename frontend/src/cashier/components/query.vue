@@ -36,6 +36,18 @@
             <el-table-column v-if="isDepositShow" prop="deposit_end_date" label="存款终止日期" />
             <el-table-column v-if="isDepositShow" prop="deposit_amount" label="存款金额" />
             <el-table-column v-if="isDepositShow" prop="cashier_id" label="出纳员ID" />
+
+            <el-table-column align="center" label="更改" width="120">
+                <template #default="scope">
+                    <span> {{ scope.row.auto_renew_status}} </span>
+                    <el-button type = "primary" icon = 'Edit' @click="saveInfo(scope.row)">
+                    Ok
+                    </el-button>
+                    <el-button type = "primary" icon = 'Edit' @click="editInfo(scope.row)" v-if="scope.row.deposit_end_date">
+                    更改续期状态
+                    </el-button>
+                </template>
+            </el-table-column>
             <!-- <el-table-column label="操作">
                 <template #default="scope">
                     <el-button :disabled="scope.row.returnTime !== '0' " link type="primary" size="small" @click="returnBook(scope.row)" v-model="returnBookVisible">还书</el-button>
@@ -95,6 +107,7 @@ import { ElMessage } from 'element-plus'
 export default {
     data() {
         return {
+            nowdate: '',
             cashierID: 1,
             isDepositShow: false, // 存款记录展示状态
             isWithdrawlShow: false, // 取款记录展示状态
@@ -199,21 +212,22 @@ export default {
             this.cashierID = params.get('cashierID');
         },
         async QueryRecords() {
-            this.deposit_records = [],
+            // console.log(this.deposit_records)
+            // this.deposit_records = [],
             this.withdrawl_records = [],
             this.transfer_record = []
-            let response = await axios.get('/cashier/all-records/', { 
-                params: { 
-                    type:this.select,
-                    account_id:this.toQuery
-                } 
-            }) 
-            let records = response.data // 获取响应负载
+            // let response = await axios.get('/all-records/', { 
+            //     params: { 
+            //         type:this.select,
+            //         account_id:this.toQuery
+            //     } 
+            // }) 
+            // let records = response.data // 获取响应负载
             //存款记录
             if(this.select === 1) {
-                records.forEach(record => { // 对于每一个借书记录
-                this.deposit_records.push(record) // 将它加入到列表项中
-                });
+                // records.forEach(record => { // 对于每一个借书记录
+                // this.deposit_records.push(record) // 将它加入到列表项中
+                // });
                 this.isDepositShow = true // 显示结果列表
             }
             else this.isDepositShow = false
@@ -236,9 +250,14 @@ export default {
             }
             else this.isTransferShow = false
         },
+        editInfo(data) {
+            console.log(data)
+        }
     },
     mounted() { // 当页面被渲染时
-        // this.QueryRecords() // 查询存款记录
+        this.QueryRecords() // 查询存款记录
+        this.date = new Date();
+        console.log(this.date)
     }
 
 }

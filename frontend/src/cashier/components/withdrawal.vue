@@ -129,7 +129,7 @@ export default {
                 { // 请求体
                     account_id: this.newWithdrawlInfo.account_id,
                     password: this.newWithdrawlInfo.password,
-                    withdrawl_amount : this.newWithdrawlInfo.withdrawl_amount,
+                    withdrawl_amount : parseFloat(this.newWithdrawlInfo.withdrawl_amount),
                     cashier_id: this.cashierID      
                 })
                 .then(response => {
@@ -141,6 +141,9 @@ export default {
     },
     mounted() { // 当页面被渲染时
         this.QueryWithdrawls() // 查询取款记录
+    },
+    created() {
+        this.fetchDataFromUrl()
     }
 
 }

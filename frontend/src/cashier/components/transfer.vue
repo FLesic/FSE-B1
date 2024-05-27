@@ -139,7 +139,7 @@ export default {
                     account_in_id: this.newTransferlInfo.account_in_id,
                     account_out_id: this.newTransferlInfo.account_out_id,
                     password: this.newTransferInfo.password,
-                    transfer_amount : this.newTransferInfo.transfer_amount,
+                    transfer_amount : parseFloat(this.newTransferInfo.transfer_amount),
                     cashier_id: this.cashierID
                     
                 })
@@ -152,6 +152,9 @@ export default {
     },
     mounted() { // 当页面被渲染时
         this.QueryTransfers() // 查询转账记录
+    },
+    created() {
+        this.fetchDataFromUrl()
     }
 
 }
