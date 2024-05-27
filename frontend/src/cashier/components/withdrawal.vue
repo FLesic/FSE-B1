@@ -41,7 +41,7 @@
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 取款金额：
-                <el-input v-model="newWithdrawlInfo.withdrawl_amount" style="width: 12.5vw;" clearable />
+                <el-input-number v-model="newWithdrawlInfo.withdrawl_amount" style="width: 12.5vw;" :precision="2" :step="0.1" clearable />
             </div>
 
             <template #footer>
@@ -129,7 +129,7 @@ export default {
                 { // 请求体
                     account_id: this.newWithdrawlInfo.account_id,
                     password: this.newWithdrawlInfo.password,
-                    withdrawl_amount : this.newWithdrawlInfo.withdrawl_amount,
+                    withdrawl_amount : parseFloat(this.newWithdrawlInfo.withdrawl_amount),
                     cashier_id: this.cashierID      
                 })
                 .then(response => {
@@ -141,6 +141,9 @@ export default {
     },
     mounted() { // 当页面被渲染时
         this.QueryWithdrawls() // 查询取款记录
+    },
+    created() {
+        this.fetchDataFromUrl()
     }
 
 }

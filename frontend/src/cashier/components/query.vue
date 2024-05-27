@@ -36,6 +36,15 @@
             <el-table-column v-if="isDepositShow" prop="deposit_end_date" label="存款终止日期" />
             <el-table-column v-if="isDepositShow" prop="deposit_amount" label="存款金额" />
             <el-table-column v-if="isDepositShow" prop="cashier_id" label="出纳员ID" />
+
+            <el-table-column align="center" label="更改" width="120">
+                <template #default="scope">
+                    <!-- <span> {{ scope.row.deposit_record_id}} </span> -->
+                    <el-button type = "primary" icon = 'Edit' @click="editAuto(scope.row.deposit_record_id)">
+                    更改续期状态
+                    </el-button>
+                </template>
+            </el-table-column>
             <!-- <el-table-column label="操作">
                 <template #default="scope">
                     <el-button :disabled="scope.row.returnTime !== '0' " link type="primary" size="small" @click="returnBook(scope.row)" v-model="returnBookVisible">还书</el-button>
@@ -95,6 +104,7 @@ import { ElMessage } from 'element-plus'
 export default {
     data() {
         return {
+            nowdate: '',
             cashierID: 1,
             isDepositShow: false, // 存款记录展示状态
             isWithdrawlShow: false, // 取款记录展示状态
@@ -108,7 +118,7 @@ export default {
                 deposit_start_date: 0,
                 deposit_end_date: 1,
                 deposit_amount : 100.00,
-                cashier_id: 1
+                cashier_id: 1,
             }],
             withdrawl_records: [{ // 列表项
                 withdrawl_record_id: 1,
@@ -131,6 +141,7 @@ export default {
             DemandDepositVisible:false,
             TimeDepositVisible:false,
             TotalDepositVisible:false,
+            AutoEditVisible:false,
             Search,
             toSearch: '', // 搜索内容
             toQuery:'',
@@ -199,21 +210,22 @@ export default {
             this.cashierID = params.get('cashierID');
         },
         async QueryRecords() {
-            this.deposit_records = [],
+            // console.log(this.deposit_records)
+            // this.deposit_records = [],
             this.withdrawl_records = [],
             this.transfer_record = []
-            let response = await axios.get('/cashier/all-records/', { 
-                params: { 
-                    type:this.select,
-                    account_id:this.toQuery
-                } 
-            }) 
-            let records = response.data // 获取响应负载
+            // let response = await axios.get('/all-records/', { 
+            //     params: { 
+            //         type:this.select,
+            //         account_id:this.toQuery
+            //     } 
+            // }) 
+            // let records = response.data // 获取响应负载
             //存款记录
             if(this.select === 1) {
-                records.forEach(record => { // 对于每一个借书记录
-                this.deposit_records.push(record) // 将它加入到列表项中
-                });
+                // records.forEach(record => { // 对于每一个借书记录
+                // this.deposit_records.push(record) // 将它加入到列表项中
+                // });
                 this.isDepositShow = true // 显示结果列表
             }
             else this.isDepositShow = false
@@ -236,9 +248,22 @@ export default {
             }
             else this.isTransferShow = false
         },
+        editAuto(data) {
+            console.log(data)
+            // axios.post("/cashier/update-auto-renew/",
+            //     { // 请求体
+            //         record_id: data
+            //     })
+            //     .then(response => {
+            //         ElMessage.success("更改成功") // 显示消息提醒
+            //         this.QueryRecords() // 重新查询存款记录以刷新页面
+            //     })
+        }
     },
     mounted() { // 当页面被渲染时
-        // this.QueryRecords() // 查询存款记录
+        this.QueryRecords() // 查询存款记录
+        this.date = new Date();
+        console.log(this.date)
     }
 
 }
