@@ -275,6 +275,9 @@ export default{
           this.modBaseCashierVisible = false
           this.QueryCashiers()
       })
+      .catch(error => {
+          ElMessage.error(error.response.data.error)
+      })
     },
     ConfirmModAuthorityCashier(){
       axios.post('manager/modify-authority/',
