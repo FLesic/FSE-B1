@@ -303,7 +303,10 @@ def cashier_transfer(request):
 # 查询所有交易记录
 def cashier_all_records(request):
     if request.method == 'GET':
-        # print(type(request.GET.get('type')))
+        if (request.GET.get('account_id') != ''
+                and not account.objects.filter(account_id=int(request.GET.get('account_id'))).exists()):
+            # print("Invalid account_id")
+            return JsonResponse({"error": "查询的用户不存在"}, status=403)
         if request.GET.get('type') == '1':
             dic = {}
             dic['account_id'] = int(request.GET.get('account_id'))
@@ -327,6 +330,21 @@ def cashier_all_records(request):
         return JsonResponse({"error": "传入参数错误"}, status=403)
     else:
         return JsonResponse({"error": "Method not allowed"}, status=405)
+
+
+@csrf_exempt
+def cashier_update_auto_renew(request):
+    if request.method == "POST":
+        data = json.loads(request.body.decode('utf-8'))
+        modify_deposit = deposit_record.objects.get(deposit_record_id=data.get("record_id"))
+        modify_deposit.auto_renew_status = not modify_deposit.auto_renew_status
+        modify_deposit.save()
+        return JsonResponse({"success": "successful operation"}, status=200)
+    elif request.method == "OPTIONS":
+        return JsonResponse({"success": "OPTION operation"}, status=200)
+    else:
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+
 
 @csrf_exempt
 def cashier_unfreeze(request):
