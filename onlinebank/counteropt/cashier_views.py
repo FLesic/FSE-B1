@@ -288,6 +288,9 @@ def cashier_transfer(request):
             filter_out_account.uncredited_deposit -= data.get('transfer_amount')
             filter_out_account.balance -= data.get('transfer_amount')
             filter_out_account.save()
+            filter_in_account.uncredited_deposit += data.get('transfer_amount')
+            filter_in_account.balance += data.get('transfer_amount')
+            filter_in_account.save()
             # 更新取款记录
             new_transfer_record = transfer_record(
                 account_in_id=data.get('account_in_id'),
