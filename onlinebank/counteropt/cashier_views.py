@@ -87,6 +87,8 @@ def cashier_all_deposits(request):
 def cashier_demand_deposit(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        if data.get('deposit_amount') <= 0:
+            return JsonResponse({"error": "活期存款金额错误"}, status=403)
         filter_account = account.objects.filter(account_id=data.get('account_id'), password=data.get('password'))
         if filter_account.exists():
             filter_account = filter_account.first()
@@ -119,6 +121,8 @@ def cashier_demand_deposit(request):
 def cashier_time_deposit(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        if data.get('deposit_amount') <= 0:
+            return JsonResponse({"error": "定期存款金额错误"}, status=403)
         filter_account = account.objects.filter(account_id=data.get('account_id'), password=data.get('password'))
         if filter_account.exists():
             filter_account = filter_account.first()
@@ -200,6 +204,8 @@ def cashier_all_withdrawls(request):
 def cashier_withdrawl(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        if data.get('withdrawl_amount') <= 0:
+            return JsonResponse({"error": "取款金额错误"}, status=403)
         filter_account = account.objects.filter(account_id=data.get('account_id'), password=data.get('password'))
         if filter_account.exists():
             filter_account = filter_account.first()
@@ -262,6 +268,8 @@ def cashier_all_transfers(request):
 def cashier_transfer(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        if data.get('transfer_amount') <= 0:
+            return JsonResponse({"error": "转账金额错误"}, status=403)
         filter_out_account = account.objects.filter(account_id=data.get('account_out_id'), password=data.get('password'))
         filter_in_account = account.objects.filter(account_id=data.get('account_in_id'))
         if not filter_in_account.exists():
@@ -332,11 +340,15 @@ def cashier_all_records(request):
         return JsonResponse({"error": "Method not allowed"}, status=405)
 
 
+# 改变自动续期状态
 @csrf_exempt
 def cashier_update_auto_renew(request):
     if request.method == "POST":
         data = json.loads(request.body.decode('utf-8'))
         modify_deposit = deposit_record.objects.get(deposit_record_id=data.get("record_id"))
+        if (account.objects.get(account_id=modify_deposit.account_id).is_frozen
+                or account.objects.get(account_id=modify_deposit.account_id).is_lost):
+            return JsonResponse({"error": "账户冻结/挂失"}, status=403)
         modify_deposit.auto_renew_status = not modify_deposit.auto_renew_status
         modify_deposit.save()
         return JsonResponse({"success": "successful operation"}, status=200)
