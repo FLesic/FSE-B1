@@ -38,7 +38,7 @@
             </el-menu-item>
           </el-sub-menu>
           <div style="height: 30px"></div>
-          <a href="/manager" style="margin-left: 40px;">
+          <a href="/" style="margin-left: 40px;">
             <el-button type="danger">
               退出
             </el-button>
