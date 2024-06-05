@@ -40,7 +40,7 @@
             <el-table-column align="center" label="更改" width="120">
                 <template #default="scope">
                     <!-- <span> {{ scope.row.deposit_record_id}} </span> -->
-                    <el-button type = "primary" icon = 'Edit' @click="editAuto(scope.row.deposit_record_id)">
+                    <el-button type = "primary" icon = 'Edit' @click="editAuto(scope.row.deposit_record_id)" :disabled="scope.row.deposit_type == '活期存款' ">
                     更改续期状态
                     </el-button>
                 </template>

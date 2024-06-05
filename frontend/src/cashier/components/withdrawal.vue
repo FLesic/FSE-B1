@@ -41,14 +41,14 @@
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 取款金额：
-                <el-input-number v-model="newWithdrawlInfo.withdrawl_amount" style="width: 12.5vw;" :precision="2" :step="0.1" clearable />
+                <el-input-number v-model="newWithdrawlInfo.withdrawl_amount" style="width: 12.5vw;" :precision="2" :step="0.1" clearable :min="0"/>
             </div>
 
             <template #footer>
                 <span>
                     <el-button @click="WithdrawlVisible = false">取消</el-button>
                     <el-button type="primary" @click="setNewWithdrawl"
-                        :disabled="newWithdrawlInfo.account_id.length === 0 || newWithdrawlInfo.password.length === 0">确定</el-button>
+                        :disabled="newWithdrawlInfo.account_id.length === 0 || newWithdrawlInfo.password.length === 0 || newWithdrawlInfo.password.length > 20">确定</el-button>
                 </span>
             </template>
         </el-dialog>

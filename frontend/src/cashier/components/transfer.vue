@@ -55,7 +55,7 @@
                 <span>
                     <el-button @click="TransferVisible = false">取消</el-button>
                     <el-button type="primary" @click="setNewTransfer"
-                        :disabled="newTransferInfo.account_in_id.length === 0 || newTransferInfo.account_out_id.length === 0 || newTransferInfo.password.length === 0">确定</el-button>
+                        :disabled="newTransferInfo.account_in_id.length === 0 || newTransferInfo.account_out_id.length === 0 || newTransferInfo.password.length === 0 || newTransferInfo.password.length > 20">确定</el-button>
                 </span>
             </template>
         </el-dialog>
