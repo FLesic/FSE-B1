@@ -7,12 +7,12 @@
     <div style="height: 20px"></div>
     <div style = "margin-left: 3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
       身份证：
-      <el-input v-model="identity_card" style="width: 12.5vw; margin-left: 1rem" clearable/>
+      <el-input v-model="identity_card" style="width: 12.5vw; margin-left: 1rem" maxlength="18" clearable/>
     </div>
     <div style="height: 20px"></div>
     <div style = "margin-left: 4.3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
       密码：
-      <el-input v-model="password" style="width: 12.5vw; margin-left: 1rem" type="password" clearable/>
+      <el-input v-model="password" style="width: 12.5vw; margin-left: 1rem" type="password" maxlength="20" clearable/>
     </div>
     <div style="height: 20px"></div>
     <div style = "margin-left: 4.3vw; font-weight: bold; font-size: 1rem; margin-top: 5px; ">

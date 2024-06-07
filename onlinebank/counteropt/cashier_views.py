@@ -90,6 +90,8 @@ def cashier_all_deposits(request):
 def cashier_demand_deposit(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        if data.get('deposit_amount') <= 0:
+            return JsonResponse({"error": "活期存款金额错误"}, status=403)
         filter_account = account.objects.filter(account_id=data.get('account_id'), password=data.get('password'))
         if filter_account.exists():
             filter_account = filter_account.first()
@@ -122,6 +124,8 @@ def cashier_demand_deposit(request):
 def cashier_time_deposit(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        if data.get('deposit_amount') <= 0:
+            return JsonResponse({"error": "定期存款金额错误"}, status=403)
         filter_account = account.objects.filter(account_id=data.get('account_id'), password=data.get('password'))
         if filter_account.exists():
             filter_account = filter_account.first()
@@ -203,6 +207,8 @@ def cashier_all_withdrawls(request):
 def cashier_withdrawl(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        if data.get('withdrawl_amount') <= 0:
+            return JsonResponse({"error": "取款金额错误"}, status=403)
         filter_account = account.objects.filter(account_id=data.get('account_id'), password=data.get('password'))
         if filter_account.exists():
             filter_account = filter_account.first()
@@ -265,6 +271,8 @@ def cashier_all_transfers(request):
 def cashier_transfer(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        if data.get('transfer_amount') <= 0:
+            return JsonResponse({"error": "转账金额错误"}, status=403)
         filter_out_account = account.objects.filter(account_id=data.get('account_out_id'), password=data.get('password'))
         filter_in_account = account.objects.filter(account_id=data.get('account_in_id'))
         if not filter_in_account.exists():
@@ -283,6 +291,9 @@ def cashier_transfer(request):
             filter_out_account.uncredited_deposit -= data.get('transfer_amount')
             filter_out_account.balance -= data.get('transfer_amount')
             filter_out_account.save()
+            filter_in_account.uncredited_deposit += data.get('transfer_amount')
+            filter_in_account.balance += data.get('transfer_amount')
+            filter_in_account.save()
             # 更新取款记录
             new_transfer_record = transfer_record(
                 account_in_id=data.get('account_in_id'),
@@ -306,7 +317,10 @@ def cashier_transfer(request):
 # 查询所有交易记录
 def cashier_all_records(request):
     if request.method == 'GET':
-        # print(type(request.GET.get('type')))
+        if (request.GET.get('account_id') != ''
+                and not account.objects.filter(account_id=int(request.GET.get('account_id'))).exists()):
+            # print("Invalid account_id")
+            return JsonResponse({"error": "查询的用户不存在"}, status=403)
         if request.GET.get('type') == '1':
             dic = {}
             dic['account_id'] = int(request.GET.get('account_id'))
@@ -330,6 +344,25 @@ def cashier_all_records(request):
         return JsonResponse({"error": "传入参数错误"}, status=403)
     else:
         return JsonResponse({"error": "Method not allowed"}, status=405)
+
+
+# 改变自动续期状态
+@csrf_exempt
+def cashier_update_auto_renew(request):
+    if request.method == "POST":
+        data = json.loads(request.body.decode('utf-8'))
+        modify_deposit = deposit_record.objects.get(deposit_record_id=data.get("record_id"))
+        if (account.objects.get(account_id=modify_deposit.account_id).is_frozen
+                or account.objects.get(account_id=modify_deposit.account_id).is_lost):
+            return JsonResponse({"error": "账户冻结/挂失"}, status=403)
+        modify_deposit.auto_renew_status = not modify_deposit.auto_renew_status
+        modify_deposit.save()
+        return JsonResponse({"success": "successful operation"}, status=200)
+    elif request.method == "OPTIONS":
+        return JsonResponse({"success": "OPTION operation"}, status=200)
+    else:
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+
 
 @csrf_exempt
 def cashier_unfreeze(request):

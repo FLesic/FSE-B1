@@ -55,23 +55,23 @@ newCashierInfo.phone = '', newCashierInfo.ifTrade = false, newCashierInfo.ifMana
       <!--各类输入框-->
       <div style = "margin-left: 3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
         姓名：
-        <el-input v-model="newCashierInfo.name" style="width: 12.5vw; margin-left: 2rem" clearable/>
+        <el-input v-model="newCashierInfo.name" style="width: 12.5vw; margin-left: 2rem" maxlength="20" clearable />
       </div>
       <div style = "margin-left: 3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
         身份证：
-        <el-input v-model="newCashierInfo.identity_card" style="width: 12.5vw; margin-left: 1rem" clearable/>
+        <el-input v-model="newCashierInfo.identity_card" style="width: 12.5vw; margin-left: 1rem" maxlength="18" clearable />
       </div>
       <div style = "margin-left: 3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
         账户名：
-        <el-input v-model="newCashierInfo.account" style="width: 12.5vw; margin-left: 1rem" clearable/>
+        <el-input v-model="newCashierInfo.account" style="width: 12.5vw; margin-left: 1rem" maxlength="20" clearable/>
       </div>
       <div style = "margin-left: 3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
         密码：
-        <el-input type="password" v-model="newCashierInfo.password" style="width: 12.5vw; margin-left: 2rem" clearable/>
+        <el-input type="password" v-model="newCashierInfo.password" style="width: 12.5vw; margin-left: 2rem" maxlength="20" clearable/>
       </div>
       <div style = "margin-left: 3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
         电话：
-        <el-input v-model="newCashierInfo.phone" style="width: 12.5vw; margin-left: 2rem" clearable/>
+        <el-input v-model="newCashierInfo.phone" style="width: 12.5vw; margin-left: 2rem" maxlength="20" clearable/>
       </div>
       <div style = "margin-left: 3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
         性别：
@@ -92,7 +92,7 @@ newCashierInfo.phone = '', newCashierInfo.ifTrade = false, newCashierInfo.ifMana
                   <el-button type="primary" @click="ConfirmNewCashier"
                              :disabled="newCashierInfo.name.length === 0 || newCashierInfo.account.length === 0
                              || newCashierInfo.identity_card.length === 0 || newCashierInfo.password.length === 0
-                             || newCashierInfo.phone === 0">确定</el-button>
+                             || newCashierInfo.phone.length === 0">确定</el-button>
               </span>
       </template>
     </el-dialog>
@@ -102,23 +102,23 @@ newCashierInfo.phone = '', newCashierInfo.ifTrade = false, newCashierInfo.ifMana
       <!--各类输入框-->
       <div style = "margin-left: 3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
         姓名：
-        <el-input v-model="modBaseCashierInfo.name" style="width: 12.5vw; margin-left: 2rem" clearable/>
+        <el-input v-model="modBaseCashierInfo.name" style="width: 12.5vw; margin-left: 2rem" maxlength="20" clearable/>
       </div>
       <div style = "margin-left: 3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
         身份证：
-        <el-input v-model="modBaseCashierInfo.identity_card" style="width: 12.5vw; margin-left: 1rem" clearable/>
+        <el-input v-model="modBaseCashierInfo.identity_card" style="width: 12.5vw; margin-left: 1rem" maxlength="18" clearable/>
       </div>
       <div style = "margin-left: 3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
         账户名：
-        <el-input v-model="modBaseCashierInfo.account" style="width: 12.5vw; margin-left: 1rem" clearable/>
+        <el-input v-model="modBaseCashierInfo.account" style="width: 12.5vw; margin-left: 1rem" maxlength="20" clearable/>
       </div>
       <div style = "margin-left: 3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
         密码：
-        <el-input type="password" v-model="modBaseCashierInfo.password" style="width: 12.5vw; margin-left: 2rem" clearable/>
+        <el-input type="password" v-model="modBaseCashierInfo.password" style="width: 12.5vw; margin-left: 2rem" maxlength="20" clearable/>
       </div>
       <div style = "margin-left: 3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
         电话：
-        <el-input v-model="modBaseCashierInfo.phone" style="width: 12.5vw; margin-left: 2rem" clearable/>
+        <el-input v-model="modBaseCashierInfo.phone" style="width: 12.5vw; margin-left: 2rem" maxlength="20" clearable/>
       </div>
       <div style = "margin-left: 3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
         性别：

@@ -10,32 +10,24 @@
           </div>
           <!-- 通过url参数形式传递给子组件 -->
           <el-menu-item :index="'/cashier/deposit?cashierID='+this.cashierID">
-            <el-icon>
-              <Avatar />
-            </el-icon>
+            <el-icon><Wallet /></el-icon>
             <span>账户存款</span>
           </el-menu-item>
           <el-menu-item :index="'/cashier/withdrawal?cashierID='+this.cashierID">
-            <el-icon>
-              <Avatar />
-            </el-icon>
+            <el-icon><Sell /></el-icon>
             <span>账户取款</span>
           </el-menu-item>
           <el-menu-item :index="'/cashier/transfer?cashierID='+this.cashierID">
-            <el-icon>
-              <Avatar />
-            </el-icon>
+            <el-icon><Switch /></el-icon>
             <span>账户转账</span>
           </el-menu-item>
           <el-menu-item :index="'/cashier/query?cashierID='+this.cashierID">
-            <el-icon>
-              <Avatar />
-            </el-icon>
+            <el-icon><Search /></el-icon>
             <span>查询记录</span>
           </el-menu-item>
           <el-sub-menu>
             <template #title>
-              <el-icon><location /></el-icon>
+              <el-icon><Avatar /></el-icon>
               <span>账户管理</span>
             </template>
             <el-menu-item :index="'/cashier/accountManage?cashierID='+this.cashierID">
@@ -66,7 +58,10 @@
 </template>
 
 <script>
+import {Avatar} from "@element-plus/icons-vue";
+
 export default {
+  components: {Avatar},
   created() {
     this.fetchDataFromUrl();
   },

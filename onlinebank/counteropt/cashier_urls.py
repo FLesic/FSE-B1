@@ -13,6 +13,7 @@ urlpatterns = [
     path('all-transfers/', cashier_views.cashier_all_transfers),
     path('transfer/', cashier_views.cashier_transfer),
     path('all-records/', cashier_views.cashier_all_records),
+    path('update-auto-renew/', cashier_views.cashier_update_auto_renew),
 
     path('unfreeze/', cashier_views.cashier_unfreeze, name = 'all-cashier_unfreeze'),
     path('freeze/', cashier_views.cashier_freeze, name = 'cashier_freeze'),

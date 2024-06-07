@@ -44,14 +44,14 @@
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 存款金额：
-                <el-input-number v-model="newDepositInfo.deposit_amount" style="width: 12.5vw;" :precision="2" :step="0.1" clearable />
+                <el-input-number v-model="newDepositInfo.deposit_amount" style="width: 12.5vw;" :precision="2" :step="0.1" clearable :min="0"/>
             </div>
 
             <template #footer>
                 <span>
                     <el-button @click="DemandDepositVisible = false">取消</el-button>
                     <el-button type="primary" @click="setNewDemandDeposit"
-                        :disabled="newDepositInfo.account_id.length === 0 || newDepositInfo.password.length === 0">确定</el-button>
+                        :disabled="newDepositInfo.account_id.length === 0 || newDepositInfo.password.length === 0 || newDepositInfo.password.length > 20">确定</el-button>
                 </span>
             </template>
         </el-dialog>
@@ -67,7 +67,7 @@
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 存款金额：
-                <el-input-number v-model="newTimeDepositInfo.deposit_amount" style="width: 12.5vw;" :precision="2" :step="0.1" clearable />
+                <el-input-number v-model="newTimeDepositInfo.deposit_amount" style="width: 12.5vw;" :precision="2" :step="0.1" clearable :min="0"/>
             </div>
             <div style="margin-left: 2vw; font-weight: bold; font-size: 1rem; margin-top: 20px; ">
                 存款期限：
@@ -85,7 +85,7 @@
                 <span>
                     <el-button @click="TimeDepositVisible = false">取消</el-button>
                     <el-button type="primary" @click="setNewTimeDeposit"
-                        :disabled="newTimeDepositInfo.account_id.length === 0 || newTimeDepositInfo.password.length === 0">确定</el-button>
+                        :disabled="newTimeDepositInfo.account_id.length === 0 || newTimeDepositInfo.password.length === 0 || newTimeDepositInfo.password.length > 20">确定</el-button>
                 </span>
             </template>
         </el-dialog>
@@ -108,7 +108,7 @@
                 <span>
                     <el-button @click="TotalDepositVisible = false">取消</el-button>
                     <el-button type="primary" @click="getTotalDeposit"
-                        :disabled="totalDepositInfo.account_id.length === 0 || totalDepositInfo.password.length === 0">确定</el-button>
+                        :disabled="totalDepositInfo.account_id.length === 0 || totalDepositInfo.password.length === 0 || totalDepositInfo.password.length > 20">确定</el-button>
                 </span>
             </template>
         </el-dialog>
