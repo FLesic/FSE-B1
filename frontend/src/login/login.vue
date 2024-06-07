@@ -6,20 +6,26 @@
                  style="height:100%; width: 100%; overflow: hidden" :router="true">
           <div style="color: white; background-color: #181818;
           width: 100%; height: 10vh; display: flex; align-items: center; justify-content: center;">
-            管理员
+            在线银行系统
           </div>
-          <el-menu-item :index="'/manager/cashier?managerID='+this.managerID">
+          <el-menu-item index="/login/employee">
             <el-icon>
               <Avatar />
             </el-icon>
-            <span>出纳员管理</span>
+            <span>银行职员登录</span>
+          </el-menu-item>
+          <el-menu-item index="/login/user">
+            <el-icon>
+              <User />
+            </el-icon>
+            <span>用户登录</span>
           </el-menu-item>
           <div style="height: 30px"></div>
-          <a href="/" style="margin-left: 40px;">
-            <el-button type="danger">
-              退出
-            </el-button>
-          </a>
+<!--          <a href="/" style="margin-left: 40px;">-->
+<!--            <el-button type="danger">-->
+<!--              退出-->
+<!--            </el-button>-->
+<!--          </a>-->
         </el-menu>
 
       </el-aside>
@@ -37,25 +43,7 @@
 
 <script>
 export default {
-  created() {
-    this.fetchDataFromUrl();
-  },
-  data(){
-    return{
-      managerID: 0
-    }
-  },
   methods: {
-    fetchDataFromUrl() {
-      // 获取当前URL
-      const url = new URL(window.location);
-
-      // 创建URLSearchParams对象
-      const params = new URLSearchParams(url.search);
-
-      // 从查询字符串中获取参数
-      this.cashierID = params.get('managerID');
-    }
   }
 }
 </script>

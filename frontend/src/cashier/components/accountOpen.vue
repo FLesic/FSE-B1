@@ -61,7 +61,7 @@ export default {
       cashierID: 0,
       identity_card: '',
       password: '',
-      openAccountVisible: true,
+      openAccountVisible: false,
       newAccount:
           {
             id: 3,
