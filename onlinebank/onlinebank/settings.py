@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'counteropt',
+    'common',
     'corsheaders',
 ]
 
@@ -82,7 +83,7 @@ WSGI_APPLICATION = 'onlinebank.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'banking',
+        'NAME': 'onlinebank',
         'USER': 'root',
         'PASSWORD': 'why1445675246',
         'HOST': 'localhost',
