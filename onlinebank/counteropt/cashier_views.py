@@ -106,6 +106,7 @@ def cashier_demand_deposit(request):
                 account_id=data.get('account_id'),
                 deposit_type='活期存款',
                 deposit_start_date=datetime.datetime.now(),
+                deposit_update_date=datetime.datetime.now(),
                 deposit_amount=data.get('deposit_amount'),
                 cashier_id=data.get('cashier_id'),
             )
@@ -135,20 +136,13 @@ def cashier_time_deposit(request):
             filter_account.current_deposit += data.get('deposit_amount')
             filter_account.balance += data.get('deposit_amount')
             filter_account.save()
-            # auto_renew_status = False
-            # print("<<<<<<<<<>>>>>>>>")
-            # print(data.get('auto_renew_status'))
-            # print(type(data.get('auto_renew_status')))
-            # if data.get('auto_renew_status'):
-            #     auto_renew_status = True
-            # elif data.get('auto_renew_status'):
-            #     auto_renew_status = False
             # 更新存款记录
             new_deposit_record = deposit_record(
                 account_id=data.get('account_id'),
                 deposit_type='定期存款',
                 auto_renew_status=data.get('auto_renew_status'),
                 deposit_start_date=datetime.datetime.now(),
+                deposit_update_date=datetime.datetime.now(),
                 deposit_end_date=datetime.datetime.now() + datetime.timedelta(days=int(data.get('deposit_term')) * 30),
                 deposit_amount=data.get('deposit_amount'),
                 cashier_id=data.get('cashier_id'),
@@ -362,6 +356,74 @@ def cashier_update_auto_renew(request):
         return JsonResponse({"success": "OPTION operation"}, status=200)
     else:
         return JsonResponse({"error": "Method not allowed"}, status=405)
+
+
+# 后端启动时自动更新定期存款金额
+def deposit_record_update():
+    print("开始更新存款金额")
+    deposits = deposit_record.objects.all()
+    demand_deposit_rate = 0.0003
+    time_deposit_rate = 0.0003
+    today = datetime.date.today()
+    today = today + datetime.timedelta(days=450)
+    # tomorrow = today + datetime.timedelta(days=30)
+    for deposit in deposits:
+        filter_account = account.objects.get(account_id=deposit.account_id)
+        # 活期存款
+        if deposit.deposit_type == '活期存款':
+            delta_time = today - deposit.deposit_update_date
+            month = int(delta_time.days/30)
+            org_uncredited_deposit = filter_account.uncredited_deposit
+            # 更改账户余额
+            for i in range(month):
+                filter_account.uncredited_deposit += filter_account.uncredited_deposit * demand_deposit_rate
+            filter_account.balance += filter_account.uncredited_deposit - org_uncredited_deposit
+            # 更改存款记录
+            deposit.deposit_update_date = deposit.deposit_update_date + datetime.timedelta(days=month*30)
+            filter_account.save()
+            deposit.save()
+        # 定期存款
+        elif deposit.deposit_type == '定期存款':
+            # 没有添加自动续期且超时
+            if (today > deposit.deposit_end_date > deposit.deposit_update_date
+                    and not deposit.auto_renew_status):
+                delta_time = deposit.deposit_end_date - deposit.deposit_update_date
+                month = int(delta_time.days/30)
+                org_current_deposit = filter_account.current_deposit
+                for i in range(month):
+                    filter_account.current_deposit += filter_account.uncredited_deposit * time_deposit_rate
+                filter_account.balance += filter_account.current_deposit - org_current_deposit
+                deposit.deposit_update_date = deposit.deposit_update_date + datetime.timedelta(days=month*30)
+                filter_account.save()
+                deposit.save()
+                continue
+            # 添加了自动续期且超时
+            if (today > deposit.deposit_end_date > deposit.deposit_update_date
+                    and deposit.auto_renew_status):
+                delta_time = today - deposit.deposit_update_date
+                month = int(delta_time.days / 30)
+                org_current_deposit = filter_account.current_deposit
+                for i in range(month):
+                    filter_account.current_deposit += filter_account.uncredited_deposit * time_deposit_rate
+                filter_account.balance += filter_account.current_deposit - org_current_deposit
+                deposit.deposit_update_date = deposit.deposit_update_date + datetime.timedelta(days=month * 30)
+                while deposit.deposit_end_date <= deposit.deposit_update_date:
+                    deposit.deposit_end_date += deposit.deposit_end_date - deposit.deposit_start_date
+                filter_account.save()
+                deposit.save()
+                continue
+            # 未超时
+            delta_time = today - deposit.deposit_update_date
+            month = int(delta_time.days / 30)
+            org_current_deposit = filter_account.current_deposit
+            for i in range(month):
+                filter_account.current_deposit += filter_account.uncredited_deposit * time_deposit_rate
+            filter_account.balance += filter_account.current_deposit - org_current_deposit
+            deposit.deposit_update_date = deposit.deposit_update_date + datetime.timedelta(days=month * 30)
+            filter_account.save()
+            deposit.save()
+    print("更新结束")
+    return None
 
 
 @csrf_exempt
