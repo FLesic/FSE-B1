@@ -365,8 +365,7 @@ def deposit_record_update():
     demand_deposit_rate = 0.0003
     time_deposit_rate = 0.0003
     today = datetime.date.today()
-    today = today + datetime.timedelta(days=450)
-    # tomorrow = today + datetime.timedelta(days=30)
+    # today = today + datetime.timedelta(days=450)
     for deposit in deposits:
         filter_account = account.objects.get(account_id=deposit.account_id)
         # 活期存款
