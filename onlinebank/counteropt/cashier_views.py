@@ -12,26 +12,33 @@ def cashier_add(request):
     if request.method == 'POST':
         # 将请求体中的数据转化为json格式
         data = json.loads(request.body.decode('utf-8'))
+        filter_cahier = cashier.objects.filter(cashier_id=data.get('cashierID'))
+        if not filter_cahier.exists():
+            return JsonResponse({"error": "柜员编号不存在"}, status=403)
+        if not filter_cahier[0].manage_authority:
+            return JsonResponse({"error": "柜员无添加用户权限"}, status=403)
         filter_online_user = online_user.objects.filter(identity_card=data.get('identity_card'))
-        if filter_online_user.exists():
-            filter_account = account.objects.filter(identity_card=filter_online_user[0])
-            if filter_account.count() >= 4:
-                return JsonResponse({"error": "账户数量超过限制"}, status=403)
-            new_account = account(
+        if not filter_online_user.exists():
+            new_online_user = online_user(
                 password=data.get('password'),
-                identity_card=filter_online_user[0],
-                card_type=data.get('cashierID'),
-                balance=0.0,
-                current_deposit=0.0,
-                uncredited_deposit=0.0,
-                is_frozen=False,
-                is_lost=False,
+                identity_card=data.get('identity_card'),
             )
-            new_account.save()
-            return_data = {'id': new_account.account_id}
-            return JsonResponse(return_data, status=200)
-        else:
-            return JsonResponse({"error": "User not exits"}, status=403)
+            new_online_user.save()
+        filter_account = account.objects.filter(identity_card=data.get('identity_card'))
+        if filter_account.count() >= 4:
+            return JsonResponse({"error": "账户数量超过限制"}, status=403)
+        filter_online_user = online_user.objects.filter(identity_card=data.get('identity_card'))
+        if not filter_online_user.exists():
+            return JsonResponse({"error": "添加online_user失败"}, status=403)
+        new_account = account(
+            password=data.get('password'),
+            user_id=filter_online_user[0],
+            identity_card=data.get('identity_card'),
+            card_type=data.get('cashierID'),
+        )
+        new_account.save()
+        return_data = {'id': new_account.account_id}
+        return JsonResponse(return_data, status=200)
     elif request.method == 'OPTION':
         return JsonResponse({"success": "OPTION operation"}, status=200)
     else:
@@ -90,6 +97,11 @@ def cashier_all_deposits(request):
 def cashier_demand_deposit(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        filter_cahier = cashier.objects.filter(cashier_id=data.get('cashier_id'))
+        if not filter_cahier.exists():
+            return JsonResponse({"error": "柜员编号不存在"}, status=403)
+        if not filter_cahier[0].trade_authority:
+            return JsonResponse({"error": "柜员活期存款权限"}, status=403)
         if data.get('deposit_amount') <= 0:
             return JsonResponse({"error": "活期存款金额错误"}, status=403)
         filter_account = account.objects.filter(account_id=data.get('account_id'), password=data.get('password'))
@@ -125,6 +137,11 @@ def cashier_demand_deposit(request):
 def cashier_time_deposit(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        filter_cahier = cashier.objects.filter(cashier_id=data.get('cashier_id'))
+        if not filter_cahier.exists():
+            return JsonResponse({"error": "柜员编号不存在"}, status=403)
+        if not filter_cahier[0].trade_authority:
+            return JsonResponse({"error": "柜员无定期存款权限"}, status=403)
         if data.get('deposit_amount') <= 0:
             return JsonResponse({"error": "定期存款金额错误"}, status=403)
         filter_account = account.objects.filter(account_id=data.get('account_id'), password=data.get('password'))
@@ -201,6 +218,11 @@ def cashier_all_withdrawls(request):
 def cashier_withdrawl(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        filter_cahier = cashier.objects.filter(cashier_id=data.get('cashier_id'))
+        if not filter_cahier.exists():
+            return JsonResponse({"error": "柜员编号不存在"}, status=403)
+        if not filter_cahier[0].trade_authority:
+            return JsonResponse({"error": "柜员无取款权限"}, status=403)
         if data.get('withdrawl_amount') <= 0:
             return JsonResponse({"error": "取款金额错误"}, status=403)
         filter_account = account.objects.filter(account_id=data.get('account_id'), password=data.get('password'))
@@ -265,6 +287,11 @@ def cashier_all_transfers(request):
 def cashier_transfer(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
+        filter_cahier = cashier.objects.filter(cashier_id=data.get('cashier_id'))
+        if not filter_cahier.exists():
+            return JsonResponse({"error": "柜员编号不存在"}, status=403)
+        if not filter_cahier[0].trade_authority:
+            return JsonResponse({"error": "柜员无转账权限"}, status=403)
         if data.get('transfer_amount') <= 0:
             return JsonResponse({"error": "转账金额错误"}, status=403)
         filter_out_account = account.objects.filter(account_id=data.get('account_out_id'), password=data.get('password'))
@@ -359,30 +386,16 @@ def cashier_update_auto_renew(request):
 
 
 # 后端启动时自动更新定期存款金额
-def deposit_record_update():
-    print("开始更新存款金额")
+def time_deposit_record_update():
+    print("开始更新定期存款金额")
     deposits = deposit_record.objects.all()
-    demand_deposit_rate = 0.0003
     time_deposit_rate = 0.0003
     today = datetime.date.today()
     # today = today + datetime.timedelta(days=450)
     for deposit in deposits:
         filter_account = account.objects.get(account_id=deposit.account_id)
-        # 活期存款
-        if deposit.deposit_type == '活期存款':
-            delta_time = today - deposit.deposit_update_date
-            month = int(delta_time.days/30)
-            org_uncredited_deposit = filter_account.uncredited_deposit
-            # 更改账户余额
-            for i in range(month):
-                filter_account.uncredited_deposit += filter_account.uncredited_deposit * demand_deposit_rate
-            filter_account.balance += filter_account.uncredited_deposit - org_uncredited_deposit
-            # 更改存款记录
-            deposit.deposit_update_date = deposit.deposit_update_date + datetime.timedelta(days=month*30)
-            filter_account.save()
-            deposit.save()
         # 定期存款
-        elif deposit.deposit_type == '定期存款':
+        if deposit.deposit_type == '定期存款':
             # 没有添加自动续期且超时
             if (today > deposit.deposit_end_date > deposit.deposit_update_date
                     and not deposit.auto_renew_status):
@@ -421,7 +434,25 @@ def deposit_record_update():
             deposit.deposit_update_date = deposit.deposit_update_date + datetime.timedelta(days=month * 30)
             filter_account.save()
             deposit.save()
-    print("更新结束")
+    print("定期存款更新结束")
+    return None
+
+
+# 后端启动时自动更新活期存款金额
+def demand_deposit_record_update():
+    print("开始更新活期存款金额")
+    demand_deposit_rate = 0.0003
+    today = datetime.date.today()
+    accounts = account.objects.all()
+    for filter_account in accounts:
+        delta_time = today - filter_account.uncredited_deposit_update_date
+        month = int(delta_time.days / 30)
+        for i in range(month):
+            filter_account.uncredited_deposit += filter_account.uncredited_deposit * demand_deposit_rate
+        filter_account.uncredited_deposit_update_date = (filter_account.uncredited_deposit_update_date
+                                                         + datetime.timedelta(days=month*30))
+        filter_account.save()
+    print("活期存款更新结束")
     return None
 
 
