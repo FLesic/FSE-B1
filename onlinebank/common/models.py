@@ -29,20 +29,36 @@ class cashier(models.Model):
 
 
 class online_user(models.Model):
-    identity_card = models.CharField(max_length = 18, null = False)
+    user_id = models.AutoField(primary_key=True)
+    user_name = models.CharField(max_length=20, null=False, default="Unknown")
+    password = models.CharField(max_length=20, null=False, default="666666")
+    identity_card = models.CharField(max_length=18, null=False, unique=True)
+    phone_num = models.CharField(max_length=20, null=False, default="10086")
+    annual_income = models.FloatField(null=True)
+    property_valuation = models.FloatField(null=True)
+    service_year = models.IntegerField(null=True)
+    is_frozen = models.BooleanField(null=False, default=False)
+    is_lost = models.BooleanField(null=False, default=False)
+    is_blacklisted = models.BooleanField(default=False)
 
 
 # 账户表
 class account(models.Model):
     account_id = models.AutoField(primary_key=True)
     password = models.CharField(max_length=20, null=False)
-    identity_card = models.ForeignKey(online_user, on_delete=models.PROTECT)
+    user_id = models.ForeignKey(online_user, on_delete=models.SET_NULL, related_name="accounts", null=True)
+    identity_card = models.CharField(max_length=18, null=False)
+    phone_num = models.CharField(max_length=20, null=False, default="10086")
     card_type = models.IntegerField(null=False)
     balance = models.FloatField(null=False, default=0.0)
     current_deposit = models.FloatField(null=False, default=0.0)
     uncredited_deposit = models.FloatField(null=False, default=0.0)
+    credit_limit = models.FloatField(default=10000)
+    lent_money = models.FloatField(null=True)
     is_frozen = models.BooleanField(null=False, default=False)
     is_lost = models.BooleanField(null=False, default=True)
+    open_date = models.DateTimeField(default=timezone.now)  # Automatically set to today's date as default
+    uncredited_deposit_update_date = models.DateTimeField(null=False, default=timezone.now)
 
 
 # 存款记录
