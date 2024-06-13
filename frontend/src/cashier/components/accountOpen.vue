@@ -97,8 +97,8 @@ export default {
       }).then(response => {
         this.openAccountVisible = true
         this.newAccount.id = response.data.id
-      }).catch(response => {
-        ElMessage.error(response.data.error);
+      }).catch(error => {
+        ElMessage.error(error.response.data.error);
         this.openAccountVisible = false
       })
     }

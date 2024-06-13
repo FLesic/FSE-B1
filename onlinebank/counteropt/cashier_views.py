@@ -1,5 +1,6 @@
 import json
 import datetime
+import pytz
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from .models import *
@@ -54,7 +55,7 @@ def cashier_query_account(request):
         account_data = {}
         account_data['id'] = filter_accounts.account_id
         account_data['password'] = filter_accounts.password
-        account_data['identity_card'] = filter_accounts.identity_card.identity_card
+        account_data['identity_card'] = filter_accounts.identity_card
         account_data['balance'] = filter_accounts.balance
         account_data['currentDeposit'] = filter_accounts.current_deposit
         account_data['uncreditedDeposit'] = filter_accounts.uncredited_deposit
@@ -442,7 +443,7 @@ def time_deposit_record_update():
 def demand_deposit_record_update():
     print("开始更新活期存款金额")
     demand_deposit_rate = 0.0003
-    today = datetime.date.today()
+    today = datetime.datetime.now(tz=pytz.UTC)
     accounts = account.objects.all()
     for filter_account in accounts:
         delta_time = today - filter_account.uncredited_deposit_update_date
@@ -460,6 +461,11 @@ def demand_deposit_record_update():
 def cashier_unfreeze(request):
     if request.method == "POST":
         data = json.loads(request.body.decode('utf-8'))
+        filter_cahier = cashier.objects.filter(cashier_id=data.get('cashierID'))
+        if not filter_cahier.exists():
+            return JsonResponse({"error": "柜员编号不存在"}, status=403)
+        if not filter_cahier[0].manage_authority:
+            return JsonResponse({"error": "柜员无状态操作权限"}, status=403)
         modify_account = account.objects.get(account_id = data.get("accountID"))
         modify_account.is_frozen = False
         modify_account.save()
@@ -472,6 +478,11 @@ def cashier_unfreeze(request):
 def cashier_freeze(request):
     if request.method == "POST":
         data = json.loads(request.body.decode('utf-8'))
+        filter_cahier = cashier.objects.filter(cashier_id=data.get('cashierID'))
+        if not filter_cahier.exists():
+            return JsonResponse({"error": "柜员编号不存在"}, status=403)
+        if not filter_cahier[0].manage_authority:
+            return JsonResponse({"error": "柜员无状态操作权限"}, status=403)
         modify_account = account.objects.get(account_id = data.get("accountID"))
         modify_account.is_frozen = True
         modify_account.save()
@@ -484,6 +495,11 @@ def cashier_freeze(request):
 def cashier_reportloss(request):
     if request.method == "POST":
         data = json.loads(request.body.decode('utf-8'))
+        filter_cahier = cashier.objects.filter(cashier_id=data.get('cashierID'))
+        if not filter_cahier.exists():
+            return JsonResponse({"error": "柜员编号不存在"}, status=403)
+        if not filter_cahier[0].manage_authority:
+            return JsonResponse({"error": "柜员无状态操作权限"}, status=403)
         modify_account = account.objects.get(account_id = data.get("accountID"))
         modify_account.is_lost = True
         modify_account.save()
@@ -496,6 +512,11 @@ def cashier_reportloss(request):
 def cashier_reissue(request):
     if request.method == "POST":
         data = json.loads(request.body.decode('utf-8'))
+        filter_cahier = cashier.objects.filter(cashier_id=data.get('cashierID'))
+        if not filter_cahier.exists():
+            return JsonResponse({"error": "柜员编号不存在"}, status=403)
+        if not filter_cahier[0].manage_authority:
+            return JsonResponse({"error": "柜员无状态操作权限"}, status=403)
         delete_account = account.objects.get(account_id = data.get("account"))
         old_id = delete_account.account_id
         new_account = account(

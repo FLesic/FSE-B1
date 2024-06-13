@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 class employee(models.Model):
@@ -56,7 +57,7 @@ class account(models.Model):
     credit_limit = models.FloatField(default=10000)
     lent_money = models.FloatField(null=True)
     is_frozen = models.BooleanField(null=False, default=False)
-    is_lost = models.BooleanField(null=False, default=True)
+    is_lost = models.BooleanField(null=False, default=False)
     open_date = models.DateTimeField(default=timezone.now)  # Automatically set to today's date as default
     uncredited_deposit_update_date = models.DateTimeField(null=False, default=timezone.now)
 
@@ -68,7 +69,6 @@ class deposit_record(models.Model):
     deposit_type = models.CharField(max_length = 10, null = False)
     auto_renew_status = models.BooleanField(null = True)
     deposit_start_date = models.DateField(null = False)
-    # 新增更新时间
     deposit_update_date = models.DateField(null=False)
     deposit_end_date = models.DateField(null = True)
     deposit_amount = models.FloatField(null = False)
