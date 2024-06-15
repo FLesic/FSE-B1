@@ -10,6 +10,11 @@
       <el-input v-model="identity_card" style="width: 12.5vw; margin-left: 1rem" maxlength="18" clearable/>
     </div>
     <div style="height: 20px"></div>
+    <div style = "margin-left: 3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
+      电话号码：
+      <el-input v-model="phone_num" style="width: 12.5vw; margin-left: 1rem" maxlength="20" clearable/>
+    </div>
+    <div style="height: 20px"></div>
     <div style = "margin-left: 4.3vw; font-weight: bold; font-size: 1rem; margin-top: 5px;">
       密码：
       <el-input v-model="password" style="width: 12.5vw; margin-left: 1rem" type="password" maxlength="20" clearable/>
@@ -37,7 +42,7 @@
         </p>
       </div>
       <template #footer>
-        <el-button type="danger" @click="openAccountVisible=false">
+        <el-button type="primary" @click="openAccountVisible=false">
           确认
         </el-button>
       </template>
@@ -60,6 +65,7 @@ export default {
     return{
       cashierID: 0,
       identity_card: '',
+      phone_num: '',
       password: '',
       openAccountVisible: false,
       newAccount:
@@ -67,6 +73,7 @@ export default {
             id: 3,
             password: '',
             identity_card: '330782200408076216',
+            phone_num: '',
             //cardType: '',
             balance: 0.00,
             curDeposit: 0.0,
@@ -90,11 +97,14 @@ export default {
     openNewAccount(){
       this.newAccount.identity_card = this.identity_card;
       this.newAccount.password = this.password;
+      this.newAccount.phone_num = this.phone_num;
       axios.post('/cashier/add/', {
         identity_card: this.newAccount.identity_card,
+        phone_num: this.newAccount.phone_num,
         password: this.newAccount.password,
         cashierID: this.cashierID
       }).then(response => {
+        ElMessage.success(response.data.success)
         this.openAccountVisible = true
         this.newAccount.id = response.data.id
       }).catch(error => {

@@ -1,8 +1,12 @@
-import json
-from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
-from .models import cashier, employee
+from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.db import transaction
+import datetime
+import json
+
+
+from .models import cashier, employee
 
 # Create your views here.
 
